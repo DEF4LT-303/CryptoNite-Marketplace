@@ -1,18 +1,71 @@
 "use client";
 
 import Link from "next/link";
+import * as React from "react";
+
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "./ui/button";
+
+const components: { title: string; href: string; description: string }[] = [
+  {
+    title: "Alert Dialog",
+    href: "",
+    description:
+      "A modal dialog that interrupts the user with important content and expects a response.",
+  },
+  {
+    title: "Hover Card",
+    href: "",
+    description:
+      "For sighted users to preview content available behind a link.",
+  },
+];
+
+const ListItem = React.forwardRef<
+  React.ElementRef<"a">,
+  React.ComponentPropsWithoutRef<"a">
+>(({ className, title, children, ...props }, ref) => {
+  return (
+    <li>
+      <NavigationMenuLink asChild>
+        <a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        >
+          <div className="text-sm font-medium leading-none">{title}</div>
+          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+            {children}
+          </p>
+        </a>
+      </NavigationMenuLink>
+    </li>
+  );
+});
+ListItem.displayName = "ListItem";
 
 const HeroSection = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <div className="bg-white dark:bg-gray-900">
+      <div className="bg-background dark:bg-background">
         <nav
           x-data="{ isOpen: false }"
-          className="relative bg-white dark:bg-gray-900"
+          className="relative bg-background dark:bg-background"
         >
           <div className="container px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
             <div className="flex items-center justify-between">
@@ -31,37 +84,39 @@ const HeroSection = () => {
                   className="text-gray-500 dark:text-gray-200 hover:text-gray-600 dark:hover:text-gray-400 focus:outline-none focus:text-gray-600 dark:focus:text-gray-400"
                   aria-label="toggle menu"
                 >
-                  <svg
-                    x-show="!isOpen"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M4 8h16M4 16h16"
-                    />
-                  </svg>
+                  {!isOpen && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-6 h-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4 8h16M4 16h16"
+                      />
+                    </svg>
+                  )}
 
-                  <svg
-                    x-show="isOpen"
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="w-6 h-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  {isOpen && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-6 h-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  )}
                 </button>
               </div>
             </div>
@@ -73,7 +128,7 @@ const HeroSection = () => {
                   : "opacity-0 -translate-x-full"
               } md:bg-transparent md:dark:bg-transparent md:mt-0 md:p-0 md:top-0 md:relative md:w-auto md:opacity-100 md:translate-x-0 md:flex md:items-center`}
             >
-              <div className="flex flex-col md:flex-row md:mx-6">
+              <div className="flex flex-col md:flex-row md:mx-6 md:hidden">
                 <a
                   className="my-2 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
                   href="#"
@@ -86,18 +141,90 @@ const HeroSection = () => {
                 >
                   Shop
                 </a>
+
                 <a
                   className="my-2 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
                   href="#"
                 >
                   Contact
                 </a>
+
                 <a
                   className="my-2 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
-                  href="#"
+                  href="/login"
                 >
-                  About
+                  Login
                 </a>
+
+                <a
+                  className="my-2 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
+                  href="/register"
+                >
+                  Sign Up
+                </a>
+              </div>
+
+              <div className="flex-row md:flex-row md:mx-6 hidden md:block">
+                <NavigationMenu>
+                  <NavigationMenuList>
+                    <NavigationMenuItem>
+                      <Link href="/" legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Home
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger>Shop</NavigationMenuTrigger>
+                      <NavigationMenuContent>
+                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                          {components.map((component) => (
+                            <ListItem
+                              key={component.title}
+                              title={component.title}
+                              href={component.href}
+                            >
+                              {component.description}
+                            </ListItem>
+                          ))}
+                        </ul>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                      <Link href="/" legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Contact
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                      <Link href="/login" passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Login
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+
+                    <NavigationMenuItem>
+                      <Link href="/register" passHref>
+                        <NavigationMenuLink
+                          className={navigationMenuTriggerStyle()}
+                        >
+                          Sign Up
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
               </div>
 
               <div className="flex justify-center md:block">
