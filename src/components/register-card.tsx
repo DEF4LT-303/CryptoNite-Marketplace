@@ -10,40 +10,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { RegisterSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FormSuccess } from "./form-message";
+import { FormError, FormSuccess } from "./form-message";
 
-const loginSchema = z.object({
-  email: z.string().email({
-    message: "Invalid email",
-  }),
-
-  password: z
-    .string()
-    .min(3, {
-      message: "Password must be at least 3 characters long",
-    })
-    .max(50, {
-      message: "Password is too long",
-    }),
-});
-
-const LoginCard = () => {
+const RegisterCard = () => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof RegisterSchema>>({
+    resolver: zodResolver(RegisterSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof loginSchema>) => {
+  const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
     startTransition(() => {
-      setSuccess("Logged in successfully");
-      // setError("Error");
+      axios
+        .post("/api/register", data)
+        .then(({ data }) => {
+          setSuccess(data.success);
+          setError(data.error);
+        })
+        .catch((error) => {
+          setError("An unknown error occured!");
+        });
     });
   };
 
@@ -66,7 +60,7 @@ const LoginCard = () => {
         </div>
 
         <p className="mt-3 text-xl text-center text-gray-600 dark:text-gray-200">
-          Welcome back!
+          Create an account!
         </p>
 
         <div className="my-2">
@@ -102,7 +96,7 @@ const LoginCard = () => {
               </defs>
             </svg>
 
-            <span>Sign in with Google</span>
+            <span>Sign up with Google</span>
           </button>
         </div>
 
@@ -113,7 +107,7 @@ const LoginCard = () => {
             href="#"
             className="text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline"
           >
-            or login with email
+            or create an account
           </a>
 
           <span className="w-1/5 border-b dark:border-gray-400 lg:w-1/4"></span>
@@ -123,6 +117,25 @@ const LoginCard = () => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="johndoe"
+                      {...field}
+                      className="bg-inherit border-gray-700"
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="email"
@@ -163,10 +176,12 @@ const LoginCard = () => {
             />
 
             <FormSuccess message={success} />
+            <FormError message={error} />
 
             <Button
               type="submit"
               className="w-full"
+              disabled={isPending}
               // variant="secondary"
             >
               Submit
@@ -178,10 +193,10 @@ const LoginCard = () => {
           <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
 
           <a
-            href="/register"
+            href="/login"
             className="text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline"
           >
-            or sign up
+            or log in
           </a>
 
           <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
@@ -191,4 +206,4 @@ const LoginCard = () => {
   );
 };
 
-export default LoginCard;
+export default RegisterCard;

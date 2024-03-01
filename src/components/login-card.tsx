@@ -10,45 +10,26 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { LoginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FormSuccess } from "./form-message";
 
-const loginSchema = z.object({
-  username: z.string().min(3, {
-    message: "Username must be at least 3 characters long",
-  }),
-
-  email: z.string().email({
-    message: "Invalid email",
-  }),
-
-  password: z
-    .string()
-    .min(3, {
-      message: "Password must be at least 3 characters long",
-    })
-    .max(50, {
-      message: "Password is too long",
-    }),
-});
-
-const RegisterCard = () => {
+const LoginCard = () => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof loginSchema>) => {
+  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
     startTransition(() => {
       setSuccess("Logged in successfully");
       // setError("Error");
-      console.log(data);
     });
   };
 
@@ -71,7 +52,7 @@ const RegisterCard = () => {
         </div>
 
         <p className="mt-3 text-xl text-center text-gray-600 dark:text-gray-200">
-          Create an account!
+          Welcome back!
         </p>
 
         <div className="my-2">
@@ -107,7 +88,7 @@ const RegisterCard = () => {
               </defs>
             </svg>
 
-            <span>Sign up with Google</span>
+            <span>Sign in with Google</span>
           </button>
         </div>
 
@@ -118,7 +99,7 @@ const RegisterCard = () => {
             href="#"
             className="text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline"
           >
-            or create an account
+            or login with email
           </a>
 
           <span className="w-1/5 border-b dark:border-gray-400 lg:w-1/4"></span>
@@ -128,25 +109,6 @@ const RegisterCard = () => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="johndoe"
-                      {...field}
-                      className="bg-inherit border-gray-700"
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="email"
@@ -202,10 +164,10 @@ const RegisterCard = () => {
           <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
 
           <a
-            href="/login"
+            href="/register"
             className="text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline"
           >
-            or log in
+            or sign up
           </a>
 
           <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
@@ -215,4 +177,4 @@ const RegisterCard = () => {
   );
 };
 
-export default RegisterCard;
+export default LoginCard;
