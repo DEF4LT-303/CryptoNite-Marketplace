@@ -13,6 +13,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid input' });
   }
 
+  const existingUser = await db.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  if (existingUser) {
+    return NextResponse.json({ error: 'User already exists' });
+  }
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await db.user.create({
