@@ -12,10 +12,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FormSuccess } from "./form-message";
+import { FormError, FormSuccess } from "./form-message";
 
 const LoginCard = () => {
   const [success, setSuccess] = useState<string | undefined>("");
@@ -24,12 +25,33 @@ const LoginCard = () => {
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
   const onSubmit = (data: z.infer<typeof LoginSchema>) => {
+    setError("");
+    setSuccess("");
+
     startTransition(() => {
-      setSuccess("Logged in successfully");
-      // setError("Error");
+      axios
+        .post("/api/login", data)
+        .then(({ data }) => {
+          if (data?.error) {
+            form.reset();
+            setError(data.error);
+          }
+
+          if (data?.success) {
+            form.reset();
+            setSuccess(data.success);
+          }
+        })
+        .catch((error) => {
+          setError("An unknown error occured!");
+        });
     });
   };
 
@@ -38,7 +60,7 @@ const LoginCard = () => {
       <div
         className="hidden bg-cover lg:block lg:w-1/2"
         style={{
-          backgroundImage: `url('/assets/background.jpg')`,
+          backgroundImage: `url('https://img.freepik.com/free-vector/abstract-falling-lines-blue-background_78370-629.jpg')`,
         }}
       ></div>
 
@@ -149,12 +171,9 @@ const LoginCard = () => {
             />
 
             <FormSuccess message={success} />
+            <FormError message={error} />
 
-            <Button
-              type="submit"
-              className="w-full"
-              // variant="secondary"
-            >
+            <Button type="submit" className="w-full" disabled={isPending}>
               Submit
             </Button>
           </form>

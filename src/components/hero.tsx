@@ -5,7 +5,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  user: boolean;
+}
+
+const HeroSection = ({ user }: HeroSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -26,14 +30,16 @@ const HeroSection = () => {
                   natus perspiciatis optio.
                 </p>
 
-                <div className="flex flex-row gap-4 my-5 justify-center">
-                  <Button asChild>
-                    <Link href="/login">Login</Link>
-                  </Button>
-                  <Button variant="secondary" asChild>
-                    <Link href="/register">Register</Link>
-                  </Button>
-                </div>
+                {!user && (
+                  <div className="flex flex-row gap-4 my-5 justify-center">
+                    <Button asChild>
+                      <Link href="/login">Login</Link>
+                    </Button>
+                    <Button variant="secondary" asChild>
+                      <Link href="/register">Register</Link>
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
 

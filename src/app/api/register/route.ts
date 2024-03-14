@@ -1,3 +1,4 @@
+import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
 import { RegisterSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
@@ -11,6 +12,12 @@ export async function POST(request: Request) {
 
   if (!validatedFields.success) {
     return NextResponse.json({ error: 'Invalid input' });
+  }
+
+  const existingUser = await getUserByEmail(email);
+
+  if (existingUser) {
+    return NextResponse.json({ error: 'User already exists' });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
