@@ -1,13 +1,26 @@
+import { auth, signOut } from "@/auth";
 import HeroSection from "@/components/hero";
 import Navbar from "@/components/navbar";
+import { Button } from "@/components/ui/button";
 
-export default function Home() {
-  const user = false;
+export default async function Home() {
+  const session = await auth();
+  const user = session ? true : false;
 
   return (
     <div>
-      <Navbar />
-      <HeroSection />
+      <Navbar user={user} />
+      <HeroSection user={user} />
+      {JSON.stringify(session)}
+      <form
+        action={async () => {
+          "use server";
+
+          await signOut();
+        }}
+      >
+        <Button>Sign Out</Button>
+      </form>
     </div>
   );
 }

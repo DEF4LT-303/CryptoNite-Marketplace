@@ -46,7 +46,7 @@ const RegisterCard = () => {
       <div
         className="hidden bg-cover lg:block lg:w-1/2"
         style={{
-          backgroundImage: `url('/assets/background.jpg')`,
+          backgroundImage: `url('https://img.freepik.com/free-vector/abstract-falling-lines-blue-background_78370-629.jpg')`,
         }}
       ></div>
 

@@ -1,3 +1,4 @@
+import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
 import { RegisterSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
@@ -13,11 +14,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid input' });
   }
 
-  const existingUser = await db.user.findUnique({
-    where: {
-      email,
-    },
-  });
+  const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
     return NextResponse.json({ error: 'User already exists' });
