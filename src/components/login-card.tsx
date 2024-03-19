@@ -1,5 +1,6 @@
 "use client";
 
+import { login } from "@/actions/login";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -12,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,6 +24,8 @@ const LoginCard = () => {
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
 
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
@@ -31,14 +34,39 @@ const LoginCard = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof LoginSchema>) => {
+  // const onSubmit = (data: z.infer<typeof LoginSchema>) => {
+  //   setError("");
+  //   setSuccess("");
+
+  //   startTransition(() => {
+  //     axios
+  //       .post("/api/login", data)
+  //       .then(({ data }) => {
+  //         if (data?.error) {
+  //           form.reset();
+  //           setError(data.error);
+  //         }
+
+  //         if (data?.success) {
+  //           console.log(data);
+  //           form.reset();
+  //           setSuccess(data.success);
+  //           router.push("/login");
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         setError("An unknown error occured!");
+  //       });
+  //   });
+  // };
+
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
 
     startTransition(() => {
-      axios
-        .post("/api/login", data)
-        .then(({ data }) => {
+      login(values)
+        .then((data) => {
           if (data?.error) {
             form.reset();
             setError(data.error);
@@ -49,8 +77,8 @@ const LoginCard = () => {
             setSuccess(data.success);
           }
         })
-        .catch((error) => {
-          setError("An unknown error occured!");
+        .catch((err) => {
+          setError("Something went wrong!");
         });
     });
   };

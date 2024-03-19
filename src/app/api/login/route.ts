@@ -1,8 +1,8 @@
 import { signIn } from "@/auth";
 import { getUserByEmail } from "@/data/user";
-import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema } from "@/schemas";
 import { AuthError } from "next-auth";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
@@ -13,26 +13,30 @@ export async function POST(request: Request) {
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser || !existingUser.email || !existingUser.password) {
-    return Response.json({ error: "Email does not exist!" });
+    return NextResponse.json({ error: "Email does not exist!" });
   }
 
   if (!validatedFields.success) {
-    return Response.json({ error: 'Invalid input' });
+    return NextResponse.json({ error: 'Invalid input' });
   }
 
   try {
     await signIn("credentials", {
       email: validatedFields.data.email,
       password: validatedFields.data.password,
-      redirectTo: DEFAULT_LOGIN_REDIRECT
+
+      redirect: false
     })
-    console.log('success');
+
+    console.log('Sign in successful!');
+    return NextResponse.json({ success: 'Sign in successful!' });
+    // return NextResponse.redirect('/');
 
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
-        case 'CredentialsSignin': return Response.json({ error: 'Invalid credentials!' });
-        default: return Response.json({ error: 'An error has occurred!' });
+        case 'CredentialsSignin': return NextResponse.json({ error: 'Invalid credentials!' });
+        default: return NextResponse.json({ error: 'An error has occurred!' });
       }
     }
     throw error;
