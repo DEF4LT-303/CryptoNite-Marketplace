@@ -18,6 +18,14 @@ declare module "next-auth" {
 
 export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   callbacks: {
+    // async signIn({ user }) {
+    //   const existingUser = await getUserById(user.id)
+
+    //   if (!existingUser || !existingUser.emailVerified) return false
+
+    //   return true
+    // },
+
     async jwt({ token }) {
       if (!token.sub) return token
 
