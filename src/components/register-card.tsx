@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { RegisterSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -184,7 +185,8 @@ const RegisterCard = () => {
               disabled={isPending}
               // variant="secondary"
             >
-              Submit
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Register
             </Button>
           </form>
         </Form>

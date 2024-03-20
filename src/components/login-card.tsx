@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -51,7 +52,7 @@ const LoginCard = () => {
   //           console.log(data);
   //           form.reset();
   //           setSuccess(data.success);
-  //           router.push("/login");
+  //           router.push("/");
   //         }
   //       })
   //       .catch((error) => {
@@ -202,7 +203,8 @@ const LoginCard = () => {
             <FormError message={error} />
 
             <Button type="submit" className="w-full" disabled={isPending}>
-              Submit
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Login
             </Button>
           </form>
         </Form>
