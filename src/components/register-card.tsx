@@ -26,6 +26,12 @@ const RegisterCard = () => {
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
@@ -33,8 +39,15 @@ const RegisterCard = () => {
       axios
         .post("/api/register", data)
         .then(({ data }) => {
-          setSuccess(data.success);
-          setError(data.error);
+          if (data.success) {
+            form.reset();
+            setError("");
+            setSuccess(data.success);
+          } else {
+            form.reset();
+            setSuccess("");
+            setError(data.error);
+          }
         })
         .catch((error) => {
           setError("An unknown error occured!");
@@ -162,6 +175,26 @@ const RegisterCard = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="********"
+                      {...field}
+                      className="bg-inherit border-gray-700"
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
