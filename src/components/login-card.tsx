@@ -40,32 +40,6 @@ const LoginCard = () => {
     },
   });
 
-  // const onSubmit = (data: z.infer<typeof LoginSchema>) => {
-  //   setError("");
-  //   setSuccess("");
-
-  //   startTransition(() => {
-  //     axios
-  //       .post("/api/login", data)
-  //       .then(({ data }) => {
-  //         if (data?.error) {
-  //           form.reset();
-  //           setError(data.error);
-  //         }
-
-  //         if (data?.success) {
-  //           console.log(data);
-  //           form.reset();
-  //           setSuccess(data.success);
-  //           router.push("/");
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         setError("An unknown error occured!");
-  //       });
-  //   });
-  // };
-
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
