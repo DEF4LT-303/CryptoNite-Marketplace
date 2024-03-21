@@ -1,6 +1,7 @@
 import { auth, signOut } from "@/auth";
 import HeroSection from "@/components/hero";
 import Navbar from "@/components/navbar";
+import Navbar2 from "@/components/navbar2";
 import { Button } from "@/components/ui/button";
 
 export default async function Home() {
@@ -9,7 +10,7 @@ export default async function Home() {
 
   return (
     <div>
-      <Navbar user={user} />
+      {/* <Navbar user={user} /> */}
       <HeroSection user={user} />
       {JSON.stringify(session)}
       <form
