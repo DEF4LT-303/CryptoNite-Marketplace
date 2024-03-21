@@ -140,13 +140,13 @@ const Navbar = ({ user }: NavbarProps) => {
                         <>
                           <Link
                             className="my-2 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
-                            href="/login"
+                            href="/auth/login"
                           >
                             Login
                           </Link>
                           <Link
                             className="my-2 text-gray-700 transition-colors duration-300 transform dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400 md:mx-4 md:my-0"
-                            href="/register"
+                            href="/auth/register"
                           >
                             Sign Up
                           </Link>
@@ -224,7 +224,7 @@ const Navbar = ({ user }: NavbarProps) => {
                         aria-hidden="true"
                       />
                       <NavigationMenuItem>
-                        <Link href="/login" legacyBehavior passHref>
+                        <Link href="/auth/login" legacyBehavior passHref>
                           <NavigationMenuLink
                             className={navigationMenuTriggerStyle()}
                           >
@@ -234,7 +234,7 @@ const Navbar = ({ user }: NavbarProps) => {
                       </NavigationMenuItem>
 
                       <NavigationMenuItem>
-                        <Link href="/register" legacyBehavior passHref>
+                        <Link href="/auth/register" legacyBehavior passHref>
                           <NavigationMenuLink
                             className={navigationMenuTriggerStyle()}
                           >

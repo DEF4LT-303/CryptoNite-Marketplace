@@ -33,10 +33,10 @@ const HeroSection = ({ user }: HeroSectionProps) => {
                 {!user && (
                   <div className="flex flex-row gap-4 my-5 justify-center">
                     <Button asChild>
-                      <Link href="/login">Login</Link>
+                      <Link href="/auth/login">Login</Link>
                     </Button>
                     <Button variant="secondary" asChild>
-                      <Link href="/register">Register</Link>
+                      <Link href="/auth/register">Register</Link>
                     </Button>
                   </div>
                 )}
