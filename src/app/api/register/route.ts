@@ -6,9 +6,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { username, email, password, confirmPassword } = body;
+  const { name, email, password, confirmPassword } = body;
 
-  const validatedFields = RegisterSchema.safeParse({ username, email, password, confirmPassword });
+  const validatedFields = RegisterSchema.safeParse({ name, email, password, confirmPassword });
 
   if (!validatedFields.success) {
     return NextResponse.json({ error: 'Invalid input' });
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
 
   const user = await db.user.create({
     data: {
-      username,
+      name,
       email,
       password: hashedPassword,
     },
