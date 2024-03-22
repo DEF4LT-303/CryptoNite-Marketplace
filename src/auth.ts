@@ -32,13 +32,16 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
   },
 
   callbacks: {
-    // async signIn({ user }) {
-    //   const existingUser = await getUserById(user.id)
+    async signIn({ user, account }) {
+      if (account?.provider !== "credentials") return true;
 
-    //   if (!existingUser || !existingUser.emailVerified) return false
+      const existingUser = await getUserById(user.id)
 
-    //   return true
-    // },
+      // Prevent signin without email verification
+      if (!existingUser?.emailVerified) return false;
+
+      return true
+    },
 
     async jwt({ token }) {
       if (!token.sub) return token

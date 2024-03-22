@@ -2,6 +2,8 @@
 
 import { signIn } from "@/auth";
 import { getUserByEmail } from "@/data/user";
+import { sendVerificationEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/lib/token";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { LoginSchema } from "@/schemas";
 import { AuthError } from "next-auth";
@@ -11,7 +13,7 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
-    return { error: "Invalid fields" };
+    return { error: "Invalid fields!" };
   }
 
   const { email, password } = validatedFields.data;
@@ -20,6 +22,13 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
 
   if (!existingUser || !existingUser.email) {
     return { error: "Email does not exist!" };
+  }
+
+  if (!existingUser.emailVerified) {
+    const verificationToken = await generateVerificationToken(existingUser.email);
+    await sendVerificationEmail(existingUser.email, verificationToken.token);
+
+    return { success: 'Confirmation email sent!' }
   }
 
 
@@ -37,10 +46,10 @@ export const login = async (values: z.infer<typeof LoginSchema>, callbackUrl?: s
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return { error: "Invalid credentials" };
+          return { error: "Invalid credentials!" };
 
         default:
-          return { error: "Unknown error" };
+          return { error: "An unknown error hac occured!" };
       }
     }
     throw error;
