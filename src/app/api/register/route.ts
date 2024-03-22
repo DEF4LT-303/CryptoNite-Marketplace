@@ -1,5 +1,7 @@
 import { getUserByEmail } from "@/data/user";
 import { db } from "@/lib/db";
+import { sendVerificationEmail } from "@/lib/mail";
+import { generateVerificationToken } from "@/lib/token";
 import { RegisterSchema } from "@/schemas";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
@@ -30,5 +32,8 @@ export async function POST(request: Request) {
     },
   });
 
-  return NextResponse.json({ success: "User created!" });
+  const verificationToken = await generateVerificationToken(email);
+  await sendVerificationEmail(verificationToken.email, verificationToken.token);
+
+  return NextResponse.json({ success: "Confirmation email sent!" });
 }
