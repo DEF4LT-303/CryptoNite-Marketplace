@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { buttonVariants } from "./ui/button2";
+import MaxWidthWrapper from "./MaxWidthWrapper";
 
 interface HeroSectionProps {
   user: boolean;
@@ -13,33 +15,25 @@ const HeroSection = ({ user }: HeroSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <>
+    <MaxWidthWrapper>
       <div className="bg-background dark:bg-background">
         <div className="container px-6 py-16 mx-auto">
           <div className="items-center lg:flex">
             <div className="w-full lg:w-1/2">
               <div className="lg:max-w-lg flex flex-col items-start justify-start">
-                <h1 className="text-3xl font-semibold text-gray-800 dark:text-white lg:text-4xl">
-                  Best place to choose <br /> your{" "}
+                <h1 className="text-2xl font-bold tracking-tight text-grey-900 sm:text-5xl">
+                  Best place for <br /> high-quality{" "}
                   <span className="text-blue-500 ">Digital Assets</span>
                 </h1>
 
-                <p className="mt-3 text-gray-600 dark:text-gray-400">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                  Porro beatae error laborum ab amet sunt recusandae? Reiciendis
-                  natus perspiciatis optio.
+                <p className="mt-6 text-lg max-w-prose text-muted-foreground">
+                  Welcome to virtual$ets. Every asset on our platform is verified by our team to ensure our highest quality standards.
                 </p>
 
-                {!user && (
-                  <div className="flex flex-row gap-4 my-5 justify-center">
-                    <Button asChild>
-                      <Link href="/auth/login">Login</Link>
-                    </Button>
-                    <Button variant="secondary" asChild>
-                      <Link href="/auth/register">Register</Link>
-                    </Button>
-                  </div>
-                )}
+                <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                  <Link href="/products" className={buttonVariants()}>Browse Trending</Link>
+                  <Button variant='ghost'>Our Quality Promise &rarr;</Button>
+                </div>
               </div>
             </div>
 
@@ -53,7 +47,7 @@ const HeroSection = ({ user }: HeroSectionProps) => {
           </div>
         </div>
       </div>
-    </>
+    </MaxWidthWrapper>
   );
 };
 
