@@ -34,7 +34,7 @@ export default async function Home() {
     <>
       {/* <Navbar user={user} /> */}
       <HeroSection user={user} />
-      {JSON.stringify(session)}
+      {/* {JSON.stringify(session)}
       <form
         action={async () => {
           "use server";
@@ -43,9 +43,9 @@ export default async function Home() {
         }}
       >
         <Button>Sign Out</Button>
-      </form>
+      </form> */}
 
-      <section className="border-t border-gray-200 bg-gray-50">
+      <section className="border-t border-gray-200 bg-background dark:bg-background">
         <MaxWidthWrapper className="py-20">
           <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0">
             {perks.map((perk) => (
@@ -56,7 +56,7 @@ export default async function Home() {
                   </div>
                 </div>
                 <div className="mt-6 md:ml-4 md:mt-0 lg:ml-0 lg:mt-6">
-                  <h3 className="text-base font-medium text-gray-900">{perk.name}</h3>
+                  <h3 className="text-base font-medium text-muted-foreground">{perk.name}</h3>
                   <p className="mt-3 text-sm text-muted-foreground">
                     {perk.description}
                   </p>

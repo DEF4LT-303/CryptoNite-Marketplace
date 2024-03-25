@@ -25,10 +25,17 @@ export default async function RootLayout({
     <SessionProvider session={session}>
       <html lang="en" className="h-full">
         <body className={cn("relative h-full font-sans antialiased", inter.className)}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem
+            disableTransitionOnChange
+          >
           <main className="relative flex flex-col min-h-screen">
             <Navbar2 />
             <div className="flex-grow flex-1">{children}</div>
           </main>
+          </ThemeProvider>
         </body>
       </html>
     </SessionProvider>

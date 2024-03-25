@@ -5,14 +5,15 @@ import NavItems from "./NavItems"
 import { buttonVariants } from "./ui/button2"
 // import Cart from "./Cart"
 import MaxWidthWrapper from "./MaxWidthWrapper"
+import Cart from "./Cart"
 
 
 const Navbar2 = () => {
 
     const user = null
     return (
-        <div className="bg-white sticky z-50 top-0 inset-x-0 h-16">
-            <header className="relative bg-white">
+        <div className="bg-background sticky z-50 top-0 inset-x-0 h-16">
+            <header className="relative bg-background">
                 <MaxWidthWrapper>
                     <div className="border-b border-gray-200">
                         <div className="flex h-16 items-center">
@@ -43,9 +44,9 @@ const Navbar2 = () => {
                                         <span className="h-6 w-px bg-gray-200" aria-hidden='true' />
                                     </div>)}
 
-                                    {/* <div className="ml-4 flow-root lg:ml-6">
+                                    <div className="ml-4 flow-root lg:ml-6">
                                         <Cart />
-                                    </div> */}
+                                    </div>
                                 </div>
                             </div>
                         </div>

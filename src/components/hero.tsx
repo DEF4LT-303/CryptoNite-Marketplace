@@ -9,12 +9,13 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 
 interface HeroSectionProps {
   user: boolean;
-}
+} 
 
 const HeroSection = ({ user }: HeroSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
+    
     <MaxWidthWrapper>
       <div className="bg-background dark:bg-background">
         <div className="container px-6 py-16 mx-auto">
