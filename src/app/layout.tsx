@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
@@ -37,9 +37,9 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <main className="relative flex flex-col min-h-screen">
-              <Navbar user={session} />
               <div className="flex-grow flex-1">{children}</div>
             </main>
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
