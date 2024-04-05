@@ -1,9 +1,9 @@
 "use client";
 
-import { currentUser } from "@/hooks/currentUser";
+import { useCurrentUser } from "@/hooks/currentUser";
 
 const Profile = () => {
-  const user = currentUser();
+  const user = useCurrentUser();
   console.log(user);
   return <div>User: {user?.email}</div>;
 };

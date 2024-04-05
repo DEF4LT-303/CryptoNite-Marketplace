@@ -3,19 +3,17 @@
 import Link from "next/link";
 
 import { useState } from "react";
-import { Button } from "./ui/button";
-import { buttonVariants } from "./ui/button2";
 import MaxWidthWrapper from "./MaxWidthWrapper";
+import { Button, buttonVariants } from "./ui/button";
 
 interface HeroSectionProps {
   user: boolean;
-} 
+}
 
 const HeroSection = ({ user }: HeroSectionProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    
     <MaxWidthWrapper>
       <div className="bg-background dark:bg-background">
         <div className="container px-6 py-16 mx-auto">
@@ -28,12 +26,15 @@ const HeroSection = ({ user }: HeroSectionProps) => {
                 </h1>
 
                 <p className="mt-6 text-lg max-w-prose text-muted-foreground">
-                  Welcome to virtual$ets. Every asset on our platform is verified by our team to ensure our highest quality standards.
+                  Welcome to virtual$ets. Every asset on our platform is
+                  verified by our team to ensure our highest quality standards.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                  <Link href="/products" className={buttonVariants()}>Browse Trending</Link>
-                  <Button variant='ghost'>Our Quality Promise &rarr;</Button>
+                  <Link href="/products" className={buttonVariants()}>
+                    Browse Trending
+                  </Link>
+                  <Button variant="ghost">Our Quality Promise &rarr;</Button>
                 </div>
               </div>
             </div>

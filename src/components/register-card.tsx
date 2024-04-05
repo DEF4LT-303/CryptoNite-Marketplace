@@ -24,6 +24,7 @@ const RegisterCard = () => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const [pending, setPending] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -37,21 +38,24 @@ const RegisterCard = () => {
 
   const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
     startTransition(() => {
+      setPending(true);
+      setError("");
+      setSuccess("");
       axios
         .post("/api/register", data)
         .then(({ data }) => {
           if (data.success) {
             form.reset();
-            setError("");
             setSuccess(data.success);
           } else {
             form.reset();
-            setSuccess("");
             setError(data.error);
           }
+          setPending(false);
         })
         .catch((error) => {
           setError("An unknown error occured!");
+          setPending(false);
         });
     });
   };
@@ -181,10 +185,11 @@ const RegisterCard = () => {
             <Button
               type="submit"
               className="w-full"
-              disabled={isPending}
+              disabled={isPending || pending}
               // variant="secondary"
             >
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isPending ||
+                (pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />)}
               Register
             </Button>
           </form>

@@ -1,11 +1,11 @@
 import { auth } from "@/auth";
+import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar2 from "@/components/navbar2";
-import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,17 +24,22 @@ export default async function RootLayout({
   return (
     <SessionProvider session={session}>
       <html lang="en" className="h-full">
-        <body className={cn("relative h-full font-sans antialiased", inter.className)}>
+        <body
+          className={cn(
+            "relative h-full font-sans antialiased",
+            inter.className
+          )}
+        >
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
-          <main className="relative flex flex-col min-h-screen">
-            <Navbar2 />
-            <div className="flex-grow flex-1">{children}</div>
-          </main>
+            <main className="relative flex flex-col min-h-screen">
+              <Navbar user={session} />
+              <div className="flex-grow flex-1">{children}</div>
+            </main>
           </ThemeProvider>
         </body>
       </html>
