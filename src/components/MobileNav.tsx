@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import Cart from './Cart'
 
 const MobileNav = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false)
@@ -117,6 +118,7 @@ const MobileNav = () => {
                                     Sign up
                                 </Link>
                             </div>
+                            <Cart/>
                         </div>
                     </div>
                 </div>
