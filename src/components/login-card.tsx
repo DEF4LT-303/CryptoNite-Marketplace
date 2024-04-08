@@ -68,7 +68,7 @@ const LoginCard = () => {
       <div
         className="hidden bg-cover lg:block lg:w-1/2"
         style={{
-          backgroundImage: `url('https://img.freepik.com/free-vector/abstract-falling-lines-blue-background_78370-629.jpg')`,
+          backgroundImage: `url('/images/abstract-bg.jpg')`,
         }}
       ></div>
 

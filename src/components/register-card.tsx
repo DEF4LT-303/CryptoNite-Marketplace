@@ -65,7 +65,7 @@ const RegisterCard = () => {
       <div
         className="hidden bg-cover lg:block lg:w-1/2"
         style={{
-          backgroundImage: `url('https://img.freepik.com/free-vector/abstract-falling-lines-blue-background_78370-629.jpg')`,
+          backgroundImage: `url('/images/abstract-bg.jpg')`,
         }}
       ></div>
 
@@ -139,45 +139,47 @@ const RegisterCard = () => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="********"
-                      {...field}
-                      className="bg-inherit border-gray-700"
-                    />
-                  </FormControl>
+            <div className="xl:grid grid-cols-2 2xl:grid-cols-1 gap-4 xl:space-y-0 space-y-5">
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="********"
+                        {...field}
+                        className="bg-inherit border-gray-700"
+                      />
+                    </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder="********"
-                      {...field}
-                      className="bg-inherit border-gray-700"
-                    />
-                  </FormControl>
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="********"
+                        {...field}
+                        className="bg-inherit border-gray-700"
+                      />
+                    </FormControl>
 
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormSuccess message={success} />
             <FormError message={error} />
