@@ -1,6 +1,6 @@
 "use client";
 
-import { FormError, FormSuccess } from "@/components/form-message";
+import { FormError, FormSuccess } from "@/components/forms/form-message";
 import { Button } from "@/components/ui/button";
 import {
   Card,

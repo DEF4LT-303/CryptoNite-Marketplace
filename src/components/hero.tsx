@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import { useState } from "react";
-import MaxWidthWrapper from "./MaxWidthWrapper";
+import MaxWidthWrapper from "./max-width-wrapper";
 import { Button, buttonVariants } from "./ui/button";
 
 interface HeroSectionProps {

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
-import { SidebarNav } from "@/components/sidebar-nav";
+import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { SidebarNav } from "@/components/navigation/sidebar-nav";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ArrowLeft } from "lucide-react";

@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
-import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import HeroSection from "@/components/hero";
+import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
 
 const perks = [
