@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CreditCard, LifeBuoy, LogOut, Settings, User } from "lucide-react";
+import Link from "next/link";
 
 const UserButton = () => {
   const onClick = () => {
@@ -29,10 +30,12 @@ const UserButton = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-          </DropdownMenuItem>
+          <Link href="/profile">
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>
             <CreditCard className="mr-2 h-4 w-4" />
             <span>Orders</span>

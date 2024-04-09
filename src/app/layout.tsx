@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/components/settings/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { Toaster as DefaultToaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
@@ -40,6 +41,7 @@ export default async function RootLayout({
               <div className="flex-grow flex-1">{children}</div>
             </main>
             <Toaster />
+            <DefaultToaster />
           </ThemeProvider>
         </body>
       </html>

@@ -1,5 +1,6 @@
 "use client";
 
+import { login } from "@/actions/login";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,52 +11,54 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { RegisterSchema } from "@/schemas";
+import { LoginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { FormError, FormSuccess } from "./form-message";
-import Social from "./social";
+import { FormError, FormSuccess } from "../forms/form-message";
+import Social from "../social";
 
-const RegisterCard = () => {
+const LoginCard = () => {
   const [success, setSuccess] = useState<string | undefined>("");
   const [error, setError] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
-  const [pending, setPending] = useState<boolean>(false);
 
-  const form = useForm<z.infer<typeof RegisterSchema>>({
-    resolver: zodResolver(RegisterSchema),
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with different provider!"
+      : "";
+
+  const form = useForm<z.infer<typeof LoginSchema>>({
+    resolver: zodResolver(LoginSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
-  const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    setError("");
+    setSuccess("");
+
     startTransition(() => {
-      setPending(true);
-      setError("");
-      setSuccess("");
-      axios
-        .post("/api/register", data)
-        .then(({ data }) => {
-          if (data.success) {
-            form.reset();
-            setSuccess(data.success);
-          } else {
+      login(values)
+        .then((data) => {
+          if (data?.error) {
             form.reset();
             setError(data.error);
           }
-          setPending(false);
+
+          if (data?.success) {
+            form.reset();
+            setSuccess(data.success);
+          }
         })
-        .catch((error) => {
-          setError("An unknown error occured!");
-          setPending(false);
+        .catch((err) => {
+          setError("Something went wrong!");
         });
     });
   };
@@ -79,7 +82,7 @@ const RegisterCard = () => {
         </div>
 
         <p className="mt-3 text-xl text-center text-gray-600 dark:text-gray-200">
-          Create an account!
+          Welcome back!
         </p>
 
         <Social />
@@ -91,7 +94,7 @@ const RegisterCard = () => {
             href="#"
             className="text-xs text-center text-gray-500 uppercase dark:text-gray-400 hover:underline"
           >
-            or create an account
+            or login with email
           </a>
 
           <span className="w-1/5 border-b dark:border-gray-400 lg:w-1/4"></span>
@@ -101,25 +104,6 @@ const RegisterCard = () => {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="johndoe"
-                      {...field}
-                      className="bg-inherit border-gray-700"
-                    />
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="email"
@@ -139,60 +123,32 @@ const RegisterCard = () => {
               )}
             />
 
-            <div className="xl:grid grid-cols-2 2xl:grid-cols-1 gap-4 xl:space-y-0 space-y-5">
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="********"
-                        {...field}
-                        className="bg-inherit border-gray-700"
-                      />
-                    </FormControl>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="********"
+                      {...field}
+                      className="bg-inherit border-gray-700"
+                    />
+                  </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="confirmPassword"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="********"
-                        {...field}
-                        className="bg-inherit border-gray-700"
-                      />
-                    </FormControl>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormSuccess message={success} />
-            <FormError message={error} />
+            <FormError message={error || urlError} />
 
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isPending || pending}
-              // variant="secondary"
-            >
-              {isPending ||
-                (pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />)}
-              Register
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              Login
             </Button>
           </form>
         </Form>
@@ -201,10 +157,10 @@ const RegisterCard = () => {
           <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
 
           <a
-            href="/auth/login"
+            href="/auth/register"
             className="text-xs text-gray-500 uppercase dark:text-gray-400 hover:underline"
           >
-            or log in
+            or sign up
           </a>
 
           <span className="w-1/5 border-b dark:border-gray-600 md:w-1/4"></span>
@@ -214,4 +170,4 @@ const RegisterCard = () => {
   );
 };
 
-export default RegisterCard;
+export default LoginCard;

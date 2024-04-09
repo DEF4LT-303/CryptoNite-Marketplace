@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 
-import { Icons } from "./Icons";
+import { Icons } from "../Icons";
+import { buttonVariants } from "../ui/button";
 import NavItems from "./NavItems";
-import { buttonVariants } from "./ui/button";
 // import Cart from "./Cart"
-import Cart from "./Cart";
-import MaxWidthWrapper from "./MaxWidthWrapper";
-import MobileNav from "./MobileNav";
-import UserButton from "./User";
+import Cart from "../Cart";
+import MaxWidthWrapper from "../max-width-wrapper";
+import UserButton from "../user-button";
+import MobileNav from "./mobile-nav";
 
 const Navbar = ({ user }: any) => {
   return (

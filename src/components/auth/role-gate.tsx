@@ -2,7 +2,7 @@
 
 import { useCurrentRole } from "@/hooks/currentRole";
 import { useRouter } from "next/navigation";
-import { FormError } from "./form-message";
+import { FormError } from "../forms/form-message";
 
 interface RoleGateProps {
   children: React.ReactNode;
