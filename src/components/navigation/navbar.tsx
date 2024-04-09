@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 
-import { Icons } from "../Icons";
+import { Icons } from "../icons";
 import { buttonVariants } from "../ui/button";
-import NavItems from "./NavItems";
+import NavItems from "./navItems";
 // import Cart from "./Cart"
-import Cart from "../Cart";
+import Cart from "../cart";
 import MaxWidthWrapper from "../max-width-wrapper";
 import UserButton from "../user-button";
 import MobileNav from "./mobile-nav";
