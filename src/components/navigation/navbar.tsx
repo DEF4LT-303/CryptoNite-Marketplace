@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 
-import Cart from "@/components/cart";
-import { Icons } from "@/components/icons";
 import NavItems from "@/components/navigation/navItems";
 import UserButton from "@/components/user-button";
+import Cart from "../cart";
+import { Icons } from "../icons";
 import MaxWidthWrapper from "../max-width-wrapper";
 import { buttonVariants } from "../ui/button";
 import MobileNav from "./mobile-nav";
