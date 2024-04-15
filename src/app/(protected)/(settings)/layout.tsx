@@ -8,8 +8,8 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "User Profile",
-  description: "Customize your profile.",
+  title: "Settings Page",
+  description: "Customize preferences and profile.",
 };
 
 const sidebarNavItems = [

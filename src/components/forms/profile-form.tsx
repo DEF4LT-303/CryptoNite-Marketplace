@@ -15,28 +15,56 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
 import { ProfileSchema } from "@/schemas";
+import axios from "axios";
+import { useState, useTransition } from "react";
+import { toast } from "../ui/use-toast";
 
-export function ProfileForm() {
+export function ProfileForm({ user }: any) {
+  const [isPending, startTransition] = useTransition();
+  const [pending, setPending] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
-      name: undefined,
-      email: undefined,
+      name: user?.name || undefined,
+      email: user?.email || undefined,
       password: undefined,
       newPassword: undefined,
     },
   });
 
   const onSubmit = (data: z.infer<typeof ProfileSchema>) => {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    startTransition(() => {
+      setPending(true);
+
+      axios
+        .put("/api/user", data)
+        .then(({ data }) => {
+          if (data.success) {
+            toast({
+              title: data.success,
+              variant: "success",
+            });
+            // location.reload();
+            form.reset();
+          } else {
+            toast({
+              title: data.error,
+              variant: "destructive",
+            });
+          }
+          form.reset();
+          setPending(false);
+        })
+        .catch((error) => {
+          toast({
+            title: "An unknown error has occurred!",
+          });
+          setPending(false);
+        });
+
+      form.reset();
     });
   };
 
@@ -50,7 +78,7 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input placeholder="Set a name" {...field} />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a
@@ -105,7 +133,9 @@ export function ProfileForm() {
           )}
         />
 
-        <Button type="submit">Update profile</Button>
+        <Button type="submit" disabled={pending || isPending}>
+          Update profile
+        </Button>
       </form>
     </Form>
   );

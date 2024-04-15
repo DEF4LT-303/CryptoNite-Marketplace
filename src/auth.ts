@@ -51,6 +51,8 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
       if (!existingUser) return token
 
       token.role = existingUser.role
+      token.name = existingUser.name
+      token.email = existingUser.email
       return token
     },
 
@@ -61,6 +63,14 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
 
       if (token.role && session.user) {
         session.user.role = token.role as UserRole // Extend
+      }
+
+      if (token.name && session.user) {
+        session.user.name = token.name
+      }
+
+      if (token.email && session.user) {
+        session.user.email = token.email
       }
       return session
     }
