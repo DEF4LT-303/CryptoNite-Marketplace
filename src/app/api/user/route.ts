@@ -15,6 +15,10 @@ export async function PUT(request: Request) {
   const validatedFields = ProfileSchema.safeParse({ name, email, password, newPassword });
   const user = await currentUser();
 
+  if (!validatedFields.success) {
+    return NextResponse.json({ error: "Invalid input" });
+  }
+
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" });
   }
@@ -52,7 +56,6 @@ export async function PUT(request: Request) {
     body.password = hashedPassword;
     body.newPassword = undefined;
 
-    return NextResponse.json({ success: "Password updated!" });
   }
 
   await db.user.update({
