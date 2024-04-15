@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 
-import { Icons } from "../icons";
-import { buttonVariants } from "../ui/button";
-import NavItems from "./navItems";
-// import Cart from "./Cart"
+import NavItems from "@/components/navigation/navItems";
+import UserButton from "@/components/user-button";
 import Cart from "../cart";
+import { Icons } from "../icons";
 import MaxWidthWrapper from "../max-width-wrapper";
-import UserButton from "../user-button";
+import { buttonVariants } from "../ui/button";
 import MobileNav from "./mobile-nav";
 
 const Navbar = ({ user }: any) => {

@@ -8,8 +8,8 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "User Profile",
-  description: "Customize your profile.",
+  title: "Settings Page",
+  description: "Customize preferences and profile.",
 };
 
 const sidebarNavItems = [
@@ -72,7 +72,7 @@ export default function SettingsLayout({ children }: SettingsLayoutProps) {
             <aside className="-mx-4 lg:w-1/5">
               <SidebarNav items={sidebarNavItems} />
             </aside>
-            <div className="flex-1 lg:max-w-2xl">{children}</div>
+            <div className="flex-1">{children}</div>
           </div>
         </div>
       </MaxWidthWrapper>

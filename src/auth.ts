@@ -2,12 +2,13 @@ import authConfig from "@/auth.config"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { UserRole } from "@prisma/client"
 import NextAuth, { DefaultSession } from "next-auth"
-import { getUserById } from "./data/user"
+import { getAccountByUserId, getUserById } from "./data/user"
 import { db } from "./lib/db"
 
 // **Extending the Session to include Role**
 export type ExtendedUser = DefaultSession["user"] & {
-  role: UserRole
+  role: UserRole;
+  isOAuth: boolean;
 };
 
 declare module "next-auth" {
@@ -44,25 +45,38 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
     },
 
     async jwt({ token }) {
-      if (!token.sub) return token
+      if (!token.sub) return token;
 
-      const existingUser = await getUserById(token.sub)
+      const existingUser = await getUserById(token.sub);
 
-      if (!existingUser) return token
+      if (!existingUser) return token;
 
-      token.role = existingUser.role
-      return token
+      const existingAccount = await getAccountByUserId(existingUser.id);
+
+      token.isOAuth = !!existingAccount;
+      token.name = existingUser.name;
+      token.email = existingUser.email;
+      token.role = existingUser.role;
+
+      return token;
     },
 
-    async session({ token, session }) {
-      if (session.user && token.sub) {
+    async session({ session, token }) {
+      if (token.sub && session.user) {
         session.user.id = token.sub
       }
 
       if (token.role && session.user) {
-        session.user.role = token.role as UserRole // Extend
+        session.user.role = token.role as UserRole;
       }
-      return session
+
+      if (session.user && token.name && token.email && token.isOAuth !== undefined) {
+        session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.isOAuth = token.isOAuth as boolean;
+      }
+
+      return session;
     }
   },
   adapter: PrismaAdapter(db),

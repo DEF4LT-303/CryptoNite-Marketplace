@@ -36,17 +36,21 @@ const UserButton = () => {
               <span>Profile</span>
             </DropdownMenuItem>
           </Link>
-          <DropdownMenuItem>
-            <CreditCard className="mr-2 h-4 w-4" />
-            <span>Orders</span>
-          </DropdownMenuItem>
+          <Link href="/orders">
+            <DropdownMenuItem>
+              <CreditCard className="mr-2 h-4 w-4" />
+              <span>Orders</span>
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <Settings className="mr-2 h-4 w-4" />
-            <span>Settings</span>
-          </DropdownMenuItem>
+          <Link href="/settings">
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem>
             <LifeBuoy className="mr-2 h-4 w-4" />
             <span>Support</span>

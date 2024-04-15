@@ -15,28 +15,66 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+import { useCurrentUser } from "@/hooks/currentUser";
 import { ProfileSchema } from "@/schemas";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { useEffect, useState, useTransition } from "react";
+import { toast } from "../ui/use-toast";
 
 export function ProfileForm() {
+  const [isPending, startTransition] = useTransition();
+  const [pending, setPending] = useState<boolean>(false);
+
+  const user = useCurrentUser();
+  const { update } = useSession();
+
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
-      name: undefined,
-      email: undefined,
+      name: user?.name || undefined,
+      email: user?.email || undefined,
       password: undefined,
       newPassword: undefined,
     },
   });
 
+  useEffect(() => {
+    // Update the form default values whenever user data changes
+    form.setValue("name", user?.name || "");
+    form.setValue("email", user?.email || "");
+  }, [user]);
+
   const onSubmit = (data: z.infer<typeof ProfileSchema>) => {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+    startTransition(() => {
+      setPending(true);
+
+      axios
+        .put("/api/user", data)
+        .then(({ data }) => {
+          if (data.success) {
+            update();
+
+            toast({
+              title: data.success,
+              variant: "success",
+            });
+          } else {
+            toast({
+              title: data.error,
+              variant: "destructive",
+            });
+          }
+          setPending(false);
+        })
+        .catch((error) => {
+          toast({
+            title: "An unknown error has occurred!",
+          });
+          setPending(false);
+        });
+
+      form.reset();
     });
   };
 
@@ -50,7 +88,11 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Username</FormLabel>
               <FormControl>
-                <Input placeholder="shadcn" {...field} />
+                <Input
+                  placeholder="Set a name"
+                  {...field}
+                  disabled={pending || isPending}
+                />
               </FormControl>
               <FormDescription>
                 This is your public display name. It can be your real name or a
@@ -67,7 +109,11 @@ export function ProfileForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="johndoe@example.com" {...field} />
+                <Input
+                  placeholder="johndoe@example.com"
+                  {...field}
+                  disabled={user?.isOAuth || pending || isPending}
+                />
               </FormControl>
               <FormDescription>
                 Change email after verification.
@@ -76,36 +122,50 @@ export function ProfileForm() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="******" {...field} />
-              </FormControl>
-              <FormDescription>Your old password.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="newPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>New Password</FormLabel>
-              <FormControl>
-                <Input placeholder="******" {...field} />
-              </FormControl>
-              <FormDescription>Your new password.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {!user?.isOAuth && (
+          <>
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="******"
+                      {...field}
+                      disabled={pending || isPending}
+                    />
+                  </FormControl>
+                  <FormDescription>Your old password.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="newPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>New Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="******"
+                      {...field}
+                      disabled={pending || isPending}
+                    />
+                  </FormControl>
+                  <FormDescription>Your new password.</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </>
+        )}
 
-        <Button type="submit">Update profile</Button>
+        <Button type="submit" disabled={pending || isPending}>
+          Update profile
+        </Button>
       </form>
     </Form>
   );
