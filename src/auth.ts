@@ -7,7 +7,8 @@ import { db } from "./lib/db"
 
 // **Extending the Session to include Role**
 export type ExtendedUser = DefaultSession["user"] & {
-  role: UserRole
+  role: UserRole;
+  isOAuth: boolean;
 };
 
 declare module "next-auth" {
@@ -69,7 +70,7 @@ export const { handlers: { GET, POST }, auth, signIn, signOut } = NextAuth({
         session.user.role = token.role as UserRole;
       }
 
-      if (session.user) {
+      if (session.user && token.name && token.email && token.isOAuth !== undefined) {
         session.user.name = token.name;
         session.user.email = token.email;
         session.user.isOAuth = token.isOAuth as boolean;
