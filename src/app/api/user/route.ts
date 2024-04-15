@@ -15,8 +15,6 @@ export async function PUT(request: Request) {
   const validatedFields = ProfileSchema.safeParse({ name, email, password, newPassword });
   const user = await currentUser();
 
-  console.log('Server:', user);
-
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" });
   }

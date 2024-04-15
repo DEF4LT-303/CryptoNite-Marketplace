@@ -7,8 +7,6 @@ import { useCurrentUser } from "@/hooks/currentUser";
 const Profile = () => {
   const user = useCurrentUser();
 
-  console.log("Client:", user);
-
   return (
     <div className="space-y-6 lg:max-w-2xl">
       <div>
@@ -16,7 +14,7 @@ const Profile = () => {
         <p className="text-sm text-muted-foreground">Customize your profile.</p>
       </div>
       <Separator />
-      <ProfileForm user={user} />
+      <ProfileForm />
     </div>
   );
 };
