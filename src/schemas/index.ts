@@ -55,8 +55,8 @@ export const ProfileSchema = z.object({
     message: "Invalid email",
   })),
 
-  password: z.optional(z.string().min(6).max(50)),
-  newPassword: z.optional(z.string().min(6).max(50)),
+  password: z.optional(z.string().min(6).max(50)).or(z.literal('')),
+  newPassword: z.optional(z.string().min(6).max(50)).or(z.literal('')),
 }).refine((data) => {
   if (data.password && !data.newPassword) {
     return false;
@@ -78,5 +78,16 @@ export const ProfileSchema = z.object({
   {
     message: "Password is reuired!",
     path: ["password"],
+  }
+).refine((data) => {
+  if (data.password && data.newPassword && data.password === data.newPassword) {
+    return false;
+  }
+
+  return true;
+},
+  {
+    message: "Passwords must be different!",
+    path: ["newPassword"],
   }
 );

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -14,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -137,7 +139,14 @@ const LoginCard = () => {
                       className="bg-inherit border-gray-700"
                     />
                   </FormControl>
-
+                  <FormDescription>
+                    <Link
+                      href="/auth/reset"
+                      className="hover:text-popover-foreground"
+                    >
+                      Forgot password?
+                    </Link>
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
