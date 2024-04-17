@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "@/hooks/currentUser";
 import { ProfileSchema } from "@/schemas";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "../ui/use-toast";
@@ -45,6 +46,17 @@ export function ProfileForm() {
     form.setValue("email", user?.email || "");
   }, [user]);
 
+  const toastFunction = (
+    title: string,
+    variant?: "default" | "success" | "destructive"
+  ) => {
+    toast({
+      title,
+      variant,
+      duration: 3000,
+    });
+  };
+
   const onSubmit = (data: z.infer<typeof ProfileSchema>) => {
     startTransition(() => {
       setPending(true);
@@ -55,22 +67,17 @@ export function ProfileForm() {
           if (data.success) {
             update();
 
-            toast({
-              title: data.success,
-              variant: "success",
-            });
+            toastFunction(data.success, "success");
           } else {
-            toast({
-              title: data.error,
-              variant: "destructive",
-            });
+            toastFunction(
+              data.error || "An unknown error has occurred!",
+              "destructive"
+            );
           }
           setPending(false);
         })
         .catch((error) => {
-          toast({
-            title: "An unknown error has occurred!",
-          });
+          toastFunction("An unknown error has occurred!", "destructive");
           setPending(false);
         });
 
@@ -163,7 +170,9 @@ export function ProfileForm() {
           </>
         )}
 
-        <Button type="submit" disabled={pending || isPending}>
+        <Button type="submit" disabled={isPending || pending}>
+          {isPending ||
+            (pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />)}
           Update profile
         </Button>
       </form>
