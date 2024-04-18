@@ -1,6 +1,7 @@
 "use client";
 
 import { PRODUCT_CATEGORIS } from "@/config";
+import { useCurrentUser } from "@/hooks/currentUser";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +12,8 @@ const MobileNav = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const pathname = usePathname();
+
+  const user = useCurrentUser();
 
   // whenever we click an item in the menu and navigate away, we want to close the menu
   useEffect(() => {
@@ -101,26 +104,28 @@ const MobileNav = () => {
               </ul>
             </div>
 
-            <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-              <div className="flow-root">
-                <Link
-                  onClick={() => closeOnCurrent("/auth/login")}
-                  href="/auth/login"
-                  className="-m-2 block p-2 font-medium text-muted-foreground"
-                >
-                  Sign in
-                </Link>
+            {!user && (
+              <div className="space-y-6 border-t border-gray-200 px-4 py-6">
+                <div className="flow-root">
+                  <Link
+                    onClick={() => closeOnCurrent("/auth/login")}
+                    href="/auth/login"
+                    className="-m-2 block p-2 font-medium text-muted-foreground"
+                  >
+                    Sign in
+                  </Link>
+                </div>
+                <div className="flow-root">
+                  <Link
+                    onClick={() => closeOnCurrent("/auth/register")}
+                    href="/auth/register"
+                    className="-m-2 block p-2 font-medium text-muted-foreground"
+                  >
+                    Sign up
+                  </Link>
+                </div>
               </div>
-              <div className="flow-root">
-                <Link
-                  onClick={() => closeOnCurrent("/auth/register")}
-                  href="/auth/register"
-                  className="-m-2 block p-2 font-medium text-muted-foreground"
-                >
-                  Sign up
-                </Link>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

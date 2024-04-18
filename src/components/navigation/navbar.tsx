@@ -76,7 +76,20 @@ const Navbar = ({ user }: any) => {
                   </div>
                 </div>
                 <div className="lg:hidden">
-                  <Cart />
+                  <div className="flex gap-5">
+                    {user && (
+                      <>
+                        <Link href="/profile" legacyBehavior passHref>
+                          <UserButton />
+                        </Link>
+                        <span
+                          className="h-6 w-px bg-gray-200"
+                          aria-hidden="true"
+                        />
+                      </>
+                    )}
+                    <Cart />
+                  </div>
                 </div>
               </div>
             </div>

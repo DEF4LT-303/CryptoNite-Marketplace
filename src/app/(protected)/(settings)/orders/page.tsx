@@ -49,7 +49,7 @@ const OrderPage = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await axios.get(`/api/order`);
+        const response = await axios.get(`/api/order?userId=${user?.id}`);
 
         setOrders(response.data);
         setLoading(false);
@@ -60,8 +60,6 @@ const OrderPage = () => {
     };
     fetchOrders();
   }, []);
-
-  console.log(orders);
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -88,7 +86,7 @@ const OrderPage = () => {
               </div>
               <Suspense fallback={<div>Loading...</div>}>
                 <TabsContent value="all">
-                  <div className="hidden md:block">
+                  <div className="">
                     <Card x-chunk="dashboard-05-chunk-3">
                       <CardHeader className="px-7">
                         <CardTitle>Orders</CardTitle>
@@ -96,150 +94,152 @@ const OrderPage = () => {
                           Recent orders from your store.
                         </CardDescription>
                       </CardHeader>
-                      <CardContent>
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Product</TableHead>
-                              <TableHead className="hidden sm:table-cell">
-                                Order ID
-                              </TableHead>
-                              <TableHead className="hidden sm:table-cell">
-                                Status
-                              </TableHead>
-                              <TableHead className="hidden md:table-cell">
-                                Date
-                              </TableHead>
-                              <TableHead className="text-right">
-                                Amount
-                              </TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {orders.map((order) => (
-                              <TableRow key={order.id}>
-                                <TableCell>
-                                  <div className="flex flex-col gap-2">
-                                    <img
-                                      src={order.product.image}
-                                      alt="product"
-                                      className="w-10 h-10 hidden md:block"
-                                    />
-                                    <div>
-                                      <div className="flex flex-col">
-                                        <div className="font-medium">
-                                          {order.product.name}
+
+                      {orders && orders.length !== 0 ? (
+                        <>
+                          <CardContent className="hidden md:block">
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Product</TableHead>
+                                  <TableHead className="hidden sm:table-cell">
+                                    Order ID
+                                  </TableHead>
+                                  <TableHead className="hidden sm:table-cell">
+                                    Status
+                                  </TableHead>
+                                  <TableHead className="hidden md:table-cell">
+                                    Date
+                                  </TableHead>
+                                  <TableHead className="text-right">
+                                    Amount
+                                  </TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {orders.map((order) => (
+                                  <TableRow key={order.id}>
+                                    <TableCell>
+                                      <div className="flex flex-col gap-2">
+                                        <img
+                                          src={order.product.image}
+                                          alt="product"
+                                          className="w-10 h-10 hidden md:block"
+                                        />
+                                        <div>
+                                          <div className="flex flex-col">
+                                            <div className="font-medium">
+                                              {order.product.name}
+                                            </div>
+                                          </div>
+
+                                          <div className="hidden text-sm text-muted-foreground md:inline">
+                                            <p className="truncate max-w-[100px]">
+                                              {order.product.id}
+                                            </p>
+                                          </div>
                                         </div>
                                       </div>
+                                    </TableCell>
+                                    <TableCell className="hidden md:table-cell">
+                                      <p className="truncate max-w-[120px]">
+                                        {order.id}
+                                      </p>
+                                    </TableCell>
+                                    <TableCell className="hidden md:table-cell">
+                                      <Badge
+                                        className="text-xs"
+                                        variant="secondary"
+                                      >
+                                        {order.status}
+                                      </Badge>
+                                    </TableCell>
+                                    <TableCell className="hidden md:table-cell">
+                                      {format(
+                                        new Date(order.createdAt),
+                                        "yyyy-MM-dd"
+                                      )}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                      ${order.total}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </CardContent>
 
-                                      <div className="hidden text-sm text-muted-foreground md:inline">
-                                        <p className="truncate max-w-[100px]">
-                                          {order.product.id}
-                                        </p>
+                          <div className="block md:hidden">
+                            {orders.map((order) => (
+                              <Card className="mx-2 my-5 p-2">
+                                <CardHeader className="flex flex-col justify-between">
+                                  <CardTitle>Order</CardTitle>
+                                  <CardDescription className="truncate min-w-[100px]">
+                                    {order.id}
+                                  </CardDescription>
+                                </CardHeader>
+                                <Separator className="my-2 bg-slate-100" />
+                                <CardContent className="mt-5">
+                                  <div className="flex flex-col justify-between">
+                                    <div className="flex flex-row mb-5 justify-between">
+                                      <div className="flex flex-col gap-5">
+                                        <CardTitle>Product</CardTitle>
+                                        <div className="flex flex-col">
+                                          <CardTitle className="text-sm">
+                                            {order.product.name}
+                                          </CardTitle>
+                                          <CardDescription className="truncate max-w-[100px] ">
+                                            {order.product.id}
+                                          </CardDescription>
+                                        </div>
+                                      </div>
+                                      <div className="flex flex-col items-end ml-2 gap-2">
+                                        <img
+                                          src={order.product.image}
+                                          alt="product"
+                                          className="w-10 h-10 hidden sm:block"
+                                        />
+                                      </div>
+                                    </div>
+                                    <Separator className="my-2" />
+                                    <div className="flex flex-col">
+                                      <div className="flex flex-row justify-between">
+                                        <p>Status</p>
+                                        <CardDescription>
+                                          {order.status}
+                                        </CardDescription>
+                                      </div>
+                                      <Separator className="my-2" />
+                                      <div className="flex flex-row justify-between">
+                                        <p>Date</p>
+                                        <CardDescription>
+                                          {format(
+                                            new Date(order.createdAt),
+                                            "yyyy-MM-dd"
+                                          )}
+                                        </CardDescription>
+                                      </div>
+                                      <Separator className="my-2" />
+                                      <div className="flex flex-row justify-between">
+                                        <p>Amount</p>
+                                        <CardDescription>
+                                          ${order.total}
+                                        </CardDescription>
                                       </div>
                                     </div>
                                   </div>
-                                </TableCell>
-                                <TableCell className="hidden md:table-cell">
-                                  <p className="truncate max-w-[120px]">
-                                    {order.id}
-                                  </p>
-                                </TableCell>
-                                <TableCell className="hidden md:table-cell">
-                                  <Badge
-                                    className="text-xs"
-                                    variant="secondary"
-                                  >
-                                    {order.status}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell className="hidden md:table-cell">
-                                  {format(
-                                    new Date(order.createdAt),
-                                    "yyyy-MM-dd"
-                                  )}
-                                </TableCell>
-                                <TableCell className="text-right">
-                                  ${order.total}
-                                </TableCell>
-                              </TableRow>
+                                </CardContent>
+                              </Card>
                             ))}
-                          </TableBody>
-                        </Table>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  {/* Mobile view */}
-                  <div className="block md:hidden">
-                    <Card x-chunk="dashboard-05-chunk-3">
-                      <CardHeader>
-                        <CardTitle>Orders</CardTitle>
-                        <CardDescription>
-                          Recent orders from your store.
-                        </CardDescription>
-                      </CardHeader>
-                      {orders.map((order) => (
-                        <Card className="mx-2 my-5 p-2">
-                          <CardHeader className="flex flex-col justify-between">
-                            <CardTitle>Order</CardTitle>
-                            <CardDescription className="truncate min-w-[100px]">
-                              {order.id}
-                            </CardDescription>
-                          </CardHeader>
-                          <Separator className="my-2 bg-slate-100" />
-                          <CardContent className="mt-5">
-                            <div className="flex flex-col justify-between">
-                              <div className="flex flex-row mb-5 justify-between">
-                                <div className="flex flex-col gap-5">
-                                  <CardTitle>Product</CardTitle>
-                                  <div className="flex flex-col">
-                                    <CardTitle className="text-sm">
-                                      {order.product.name}
-                                    </CardTitle>
-                                    <CardDescription className="truncate max-w-[100px] ">
-                                      {order.product.id}
-                                    </CardDescription>
-                                  </div>
-                                </div>
-                                <div className="flex flex-col items-end ml-2 gap-2">
-                                  <img
-                                    src={order.product.image}
-                                    alt="product"
-                                    className="w-10 h-10 hidden sm:block"
-                                  />
-                                </div>
-                              </div>
-                              <Separator className="my-2" />
-                              <div className="flex flex-col">
-                                <div className="flex flex-row justify-between">
-                                  <p>Status</p>
-                                  <CardDescription>
-                                    {order.status}
-                                  </CardDescription>
-                                </div>
-                                <Separator className="my-2" />
-                                <div className="flex flex-row justify-between">
-                                  <p>Date</p>
-                                  <CardDescription>
-                                    {format(
-                                      new Date(order.createdAt),
-                                      "yyyy-MM-dd"
-                                    )}
-                                  </CardDescription>
-                                </div>
-                                <Separator className="my-2" />
-                                <div className="flex flex-row justify-between">
-                                  <p>Amount</p>
-                                  <CardDescription>
-                                    ${order.total}
-                                  </CardDescription>
-                                </div>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex justify-center items-center h-80">
+                          <p className="text-lg text-muted-foreground">
+                            No orders found
+                          </p>
+                        </div>
+                      )}
                     </Card>
                   </div>
                 </TabsContent>
