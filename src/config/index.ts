@@ -46,7 +46,7 @@ export const PRODUCT_CATEGORIS = [
 
 export const ORDERS = [
   {
-    id: "ORD123456",
+    id: "ORD1234",
     date: "2021-05-01",
     total: 102.96,
     status: "Delivered",
@@ -62,7 +62,7 @@ export const ORDERS = [
 
   },
   {
-    id: "ORD123456",
+    id: "ORD12345",
     date: "2021-05-02",
     total: 102.96,
     status: "Delivered",

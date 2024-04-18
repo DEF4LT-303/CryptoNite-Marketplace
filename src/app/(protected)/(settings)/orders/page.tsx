@@ -32,8 +32,38 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ORDERS } from "@/config";
+import { useCurrentUser } from "@/hooks/currentUser";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const OrderPage = () => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const user = useCurrentUser();
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const response = await axios.get(`/api/order`);
+
+        setOrders(response.data);
+        setLoading(false);
+      } catch (error) {
+        // setError(error.message);
+        setLoading(false);
+      }
+    };
+    fetchOrders();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  console.log(orders);
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -49,12 +79,12 @@ const OrderPage = () => {
         </div>
         <div className="flex-1 items-start gap-4 p-2 sm:px-6 sm:py-0 md:gap-8">
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2 ">
-            <Tabs defaultValue="week">
+            <Tabs defaultValue="all">
               <div className="flex items-center">
                 <TabsList>
-                  <TabsTrigger value="week">Week</TabsTrigger>
-                  <TabsTrigger value="month">Month</TabsTrigger>
-                  <TabsTrigger value="year">Year</TabsTrigger>
+                  <TabsTrigger value="all">All</TabsTrigger>
+                  <TabsTrigger value="delivered">Delivered</TabsTrigger>
+                  <TabsTrigger value="pending">Pending</TabsTrigger>
                 </TabsList>
                 <div className="ml-auto flex items-center gap-2">
                   <DropdownMenu>
@@ -84,7 +114,7 @@ const OrderPage = () => {
                   </DropdownMenu>
                 </div>
               </div>
-              <TabsContent value="week">
+              <TabsContent value="all">
                 <div className="hidden md:block">
                   <Card x-chunk="dashboard-05-chunk-3">
                     <CardHeader className="px-7">
@@ -221,6 +251,7 @@ const OrderPage = () => {
                   </Card>
                 </div>
               </TabsContent>
+              <TabsContent value="delivered">test</TabsContent>
             </Tabs>
           </div>
         </div>
