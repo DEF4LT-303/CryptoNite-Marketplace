@@ -15,7 +15,11 @@ export const getOrderByUserId = async (userId: string) => {
 
 export const getAllOrders = async () => {
   try {
-    const orders = await db.order.findMany();
+    const orders = await db.order.findMany({
+      include: {
+        product: true,
+      },
+    });
     return orders;
   }
   catch (error) {

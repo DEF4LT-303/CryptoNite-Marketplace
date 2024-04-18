@@ -8,5 +8,5 @@ export async function GET() {
     return NextResponse.json({ error: "Orders not found" });
   }
 
-  return NextResponse.json({ orders });
+  return NextResponse.json(orders);
 }

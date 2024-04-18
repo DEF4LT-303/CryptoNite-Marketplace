@@ -5,24 +5,24 @@ const prisma = new PrismaClient();
 const PRODUCTS = [
   {
     "id": "60c9b4744a2d2b0015b3b9d2",
-    "name": "Smartphone",
-    "description": "A powerful smartphone with cutting-edge features.",
-    "price": 699.99,
-    "image": "https://example.com/smartphone.jpg"
+    "name": "UI Icon Pack",
+    "description": "A collection of 120+ icons for your UI projects.",
+    "price": 69.99,
+    "image": "https://unblast.com/wp-content/uploads/2019/06/120-UI-Pack-Icons-3.jpg"
   },
   {
     "id": "60c9b4744a2d2b0015b3b9d3",
-    "name": "Laptop",
-    "description": "A sleek and powerful laptop for work and entertainment.",
-    "price": 1299.99,
-    "image": "https://example.com/laptop.jpg"
+    "name": "UI Icon Pack (Dark)",
+    "description": "A collection of 120+ dark-themed icons for your UI projects.",
+    "price": 69.99,
+    "image": "https://unblast.com/wp-content/uploads/2019/06/120-UI-Pack-Icons-1.jpg"
   },
   {
     "id": "60c9b4744a2d2b0015b3b9d4",
-    "name": "Headphones",
-    "description": "High-quality wireless headphones for immersive audio experience.",
+    "name": "Frontend Template",
+    "description": "A modern and responsive frontend template for your web projects.",
     "price": 149.99,
-    "image": "https://example.com/headphones.jpg"
+    "image": "https://themeforest.img.customer.envatousercontent.com/files/462800713/02_preview.png?auto=compress%2Cformat&fit=crop&crop=top&w=590&h=300&s=5a1b241d2191ecacfabc5b9b4c5720bf"
   }
 ];
 
