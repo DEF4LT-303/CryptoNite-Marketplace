@@ -15,7 +15,7 @@ const Navbar = ({ user }: any) => {
     <div className="bg-background sticky z-50 top-0 inset-x-0 h-16">
       <header className="relative bg-background">
         <MaxWidthWrapper>
-          <div className="border-b border-gray-200">
+          <div className="border-b border-gray-500">
             <div className="flex h-16 items-center">
               <MobileNav />
               <div className="ml-4 flex lg:ml-0">
@@ -40,7 +40,7 @@ const Navbar = ({ user }: any) => {
                   )}
 
                   {user ? null : (
-                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <span className="h-6 w-px bg-gray-500" aria-hidden="true" />
                   )}
 
                   {user ? (
@@ -59,13 +59,13 @@ const Navbar = ({ user }: any) => {
                   )}
 
                   {user ? (
-                    <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
+                    <span className="h-6 w-px bg-gray-500" aria-hidden="true" />
                   ) : null}
 
                   {user ? null : (
                     <div className="flex lg:ml-6">
                       <span
-                        className="h-6 w-px bg-gray-200"
+                        className="h-6 w-px bg-gray-500"
                         aria-hidden="true"
                       />
                     </div>
@@ -83,7 +83,7 @@ const Navbar = ({ user }: any) => {
                           <UserButton />
                         </Link>
                         <span
-                          className="h-6 w-px bg-gray-200"
+                          className="h-6 w-px bg-gray-500"
                           aria-hidden="true"
                         />
                       </>
