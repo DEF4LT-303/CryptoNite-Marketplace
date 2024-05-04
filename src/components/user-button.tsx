@@ -22,7 +22,7 @@ const UserButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger
         asChild
-        className="cursor-pointer text-gray-400 group-hover:text-gray-500"
+        className="cursor-pointer text-gray-400 hover:text-gray-500"
       >
         <User />
       </DropdownMenuTrigger>

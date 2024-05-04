@@ -32,7 +32,7 @@ export default async function Home() {
     <>
       <HeroSection user={user} />
 
-      <section className="border-t border-gray-200 bg-background dark:bg-background">
+      <section className="border-t border-gray-500 bg-primary-foreground">
         <MaxWidthWrapper className="py-20">
           <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0">
             {perks.map((perk) => (
@@ -46,7 +46,7 @@ export default async function Home() {
                   </div>
                 </div>
                 <div className="mt-6 md:ml-4 md:mt-0 lg:ml-0 lg:mt-6">
-                  <h3 className="text-base font-medium text-muted-foreground">
+                  <h3 className="text-base font-medium text-primary">
                     {perk.name}
                   </h3>
                   <p className="mt-3 text-sm text-muted-foreground">

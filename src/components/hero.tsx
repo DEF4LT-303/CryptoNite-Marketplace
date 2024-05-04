@@ -15,8 +15,8 @@ const HeroSection = ({ user }: HeroSectionProps) => {
 
   return (
     <MaxWidthWrapper>
-      <div className="bg-background dark:bg-background">
-        <div className="container px-6 py-16 mx-auto">
+      <div className="bg-background duration-1000 animate-in animate fade-in-5 slide-in-from-right-2.5">
+        <div className="px-6 py-16 mx-auto">
           <div className="items-center lg:flex">
             <div className="w-full lg:w-1/2">
               <div className="lg:max-w-lg flex flex-col items-start justify-start">

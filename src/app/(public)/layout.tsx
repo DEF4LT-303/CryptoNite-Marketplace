@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import Footer from "@/components/footer";
 import Navbar from "@/components/navigation/navbar";
 
 export default async function GeneralLayout({
@@ -12,6 +13,7 @@ export default async function GeneralLayout({
     <section>
       <Navbar user={session} />
       {children}
+      <Footer />
     </section>
   );
 }
