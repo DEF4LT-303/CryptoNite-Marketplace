@@ -83,10 +83,7 @@ export function CreateProductForm() {
                   value={field.value || ""}
                 />
               </FormControl>
-              <FormDescription>
-                This is your public display name. It can be your real name or a
-                pseudonym.
-              </FormDescription>
+              <FormDescription>Set a product name.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -106,9 +103,7 @@ export function CreateProductForm() {
                   value={field.value || ""}
                 />
               </FormControl>
-              <FormDescription>
-                Change email after verification.
-              </FormDescription>
+              <FormDescription>Set a product description.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -128,9 +123,7 @@ export function CreateProductForm() {
                   value={field.value || ""}
                 />
               </FormControl>
-              <FormDescription>
-                Change email after verification.
-              </FormDescription>
+              <FormDescription>Set a price.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -149,9 +142,7 @@ export function CreateProductForm() {
                   disabled={pending || isPending}
                 />
               </FormControl>
-              <FormDescription>
-                Change email after verification.
-              </FormDescription>
+              <FormDescription>Set stock amount.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -162,9 +153,6 @@ export function CreateProductForm() {
           <FormControl>
             <ImageUploader />
           </FormControl>
-          <FormDescription>
-            The image must be a .png, .jpeg or .jpg file.
-          </FormDescription>
         </FormItem>
 
         <Button type="submit" disabled={isPending || pending}>
