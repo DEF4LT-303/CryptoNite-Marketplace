@@ -2,7 +2,7 @@
 
 import { useCurrentRole } from "@/hooks/currentRole";
 import { useRouter } from "next/navigation";
-import { FormError } from "../forms/form-message";
+import { useEffect } from "react";
 
 interface RoleGateProps {
   children: React.ReactNode;
@@ -13,8 +13,14 @@ export const RoleGate = ({ children, allowedRole }: RoleGateProps) => {
   const role = useCurrentRole();
   const router = useRouter();
 
+  useEffect(() => {
+    if (role !== allowedRole) {
+      router.push("/");
+    }
+  }, [role, allowedRole, router]);
+
   if (role !== allowedRole) {
-    return <FormError message="You are not authorized to view this page" />;
+    return;
   }
 
   return <>{children}</>;
