@@ -3,7 +3,12 @@
 import { useUploadThing } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
 import { Image, Loader2, MousePointerSquareDashed, X } from "lucide-react";
-import { useState, useTransition } from "react";
+import {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useTransition,
+} from "react";
 import Dropzone, { FileRejection } from "react-dropzone";
 import { toastFunction } from "../toastfunction";
 import { Progress } from "../ui/progress";
@@ -12,7 +17,11 @@ interface PreviewFile extends File {
   preview: string; // Adding the preview property to the File interface
 }
 
-const ImageUploader = () => {
+interface ImageUploaderProps {
+  form: any; // Type according to your form library
+}
+
+const ImageUploader = forwardRef<any, ImageUploaderProps>(({}, ref) => {
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [files, setFiles] = useState<PreviewFile[]>([]);
@@ -60,6 +69,23 @@ const ImageUploader = () => {
   const removeFile = (name: String) => {
     setFiles((files) => files.filter((file) => file.name !== name));
   };
+
+  const removeAllFiles = () => {
+    setFiles([]);
+  };
+
+  const uploadImage = () => {
+    if (files.length) {
+      startUpload(files, { configId: undefined });
+      removeAllFiles();
+    } else {
+      toastFunction("No files to upload!", "destructive");
+    }
+  };
+
+  useImperativeHandle(ref, () => ({
+    uploadImage,
+  }));
 
   return (
     <div>
@@ -110,10 +136,15 @@ const ImageUploader = () => {
                       <span className="font-semibold">Drop file</span> to upload
                     </p>
                   ) : (
-                    <p>
-                      <span className="font-semibold">Click to upload</span> or
-                      drag and drop
-                    </p>
+                    <div className="flex flex-col justify-center items-center">
+                      <p>
+                        <span className="font-semibold">Click to upload</span>{" "}
+                        or drag and drop
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Image formate should be .png, .jpg or .jpeg
+                      </p>
+                    </div>
                   )}
                 </div>
               </div>
@@ -121,7 +152,7 @@ const ImageUploader = () => {
           </Dropzone>
         </div>
       </div>
-      Preview
+      {files.length > 0 && <p>Preview</p>}
       <div className="mt-5 flex flex-row flex-wrap gap-4">
         {files.map((file) => (
           <div key={file.name} className="relative h-32 w-32 my-2 ">
@@ -146,6 +177,6 @@ const ImageUploader = () => {
       </div>
     </div>
   );
-};
+});
 
 export default ImageUploader;

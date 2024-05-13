@@ -17,13 +17,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { ProductSchema } from "@/schemas";
 import { Loader2 } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { toast } from "../ui/use-toast";
 import ImageUploader from "./image-uploader";
 
 export function CreateProductForm() {
   const [isPending, startTransition] = useTransition();
   const [pending, setPending] = useState<boolean>(false);
+  const imageUploaderRef = useRef<any>(null);
 
   const form = useForm<z.infer<typeof ProductSchema>>({
     resolver: zodResolver(ProductSchema),
@@ -48,13 +49,14 @@ export function CreateProductForm() {
 
   const onSubmit = (data: z.infer<typeof ProductSchema>) => {
     startTransition(() => {
-      setPending(true);
+      // setPending(true);
 
       // Simulating an asynchronous request
       setTimeout(() => {
-        const success = Math.random() < 0.5;
+        const success = Math.random() < 0.9;
 
         if (success) {
+          imageUploaderRef.current.uploadImage();
           toastFunction("Request successful!", "success");
         } else {
           toastFunction("Request failed! An error occurred.", "destructive");
@@ -151,8 +153,11 @@ export function CreateProductForm() {
         <FormItem>
           <FormLabel>Upload Image</FormLabel>
           <FormControl>
-            <ImageUploader />
+            <ImageUploader ref={imageUploaderRef} form={form} />
           </FormControl>
+          <FormDescription>
+            A maximum of 4 images can be uploaded.
+          </FormDescription>
         </FormItem>
 
         <Button type="submit" disabled={isPending || pending}>
