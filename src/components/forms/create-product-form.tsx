@@ -160,7 +160,7 @@ export function CreateProductForm() {
 
         <Button type="submit" disabled={isPending}>
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Create Product
+          {isPending ? "Creating Product..." : "Create Product"}
         </Button>
       </form>
     </Form>
