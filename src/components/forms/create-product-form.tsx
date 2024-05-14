@@ -16,14 +16,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ProductSchema } from "@/schemas";
+import axios from "axios";
 import { Loader2 } from "lucide-react";
-import { useRef, useState, useTransition } from "react";
+import { useRef, useTransition } from "react";
 import { toastFunction } from "../toastfunction";
 import ImageUploader from "./image-uploader";
 
 export function CreateProductForm() {
   const [isPending, startTransition] = useTransition();
-  const [pending, setPending] = useState<boolean>(false);
   const imageUploaderRef = useRef<any>(null);
 
   const form = useForm<z.infer<typeof ProductSchema>>({
@@ -32,35 +32,37 @@ export function CreateProductForm() {
       name: undefined,
       description: undefined,
       price: undefined,
+      images: [],
       stock: 1,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
-    startTransition(() => {
-      // setPending(true);
+    startTransition(async () => {
+      const status = await imageUploaderRef.current.uploadImage();
+      console.log("status", status.uploadUrls);
 
-      // Simulating an asynchronous request
-      setTimeout(async () => {
-        const success = Math.random() < 1;
+      if (status && status.error) {
+        toastFunction(status.error, "destructive");
+        return;
+      }
 
-        if (success) {
-          const status = await imageUploaderRef.current.uploadImage();
-          console.log("status", status.uploadUrls);
+      data.images = status.uploadUrls; // Extend the data with image URLs
 
-          if (status && status.error) {
-            toastFunction(status.error, "destructive");
-            return;
+      axios
+        .post("/api/product", data)
+        .then(async ({ data }) => {
+          if (data.success) {
+            toastFunction(data.success, "success");
+          } else {
+            toastFunction(data.error, "destructive");
           }
 
-          toastFunction("Request successful!", "success");
-        } else {
+          form.reset();
+        })
+        .catch((error) => {
           toastFunction("Request failed! An error occurred.", "destructive");
-        }
-
-        setPending(false);
-      }, 1000);
-      form.reset();
+        });
     });
   };
 
@@ -77,7 +79,7 @@ export function CreateProductForm() {
                 <Input
                   placeholder="Set a name"
                   {...field}
-                  disabled={pending || isPending}
+                  disabled={isPending}
                   value={field.value || ""}
                 />
               </FormControl>
@@ -97,7 +99,7 @@ export function CreateProductForm() {
                 <Input
                   placeholder="Set a description"
                   {...field}
-                  disabled={pending || isPending}
+                  disabled={isPending}
                   value={field.value || ""}
                 />
               </FormControl>
@@ -117,7 +119,7 @@ export function CreateProductForm() {
                 <Input
                   placeholder="Set a price"
                   {...field}
-                  disabled={pending || isPending}
+                  disabled={isPending}
                   value={field.value || ""}
                 />
               </FormControl>
@@ -137,7 +139,7 @@ export function CreateProductForm() {
                 <Input
                   placeholder="Set a stock"
                   {...field}
-                  disabled={pending || isPending}
+                  disabled={isPending}
                 />
               </FormControl>
               <FormDescription>Set stock amount.</FormDescription>
@@ -156,9 +158,8 @@ export function CreateProductForm() {
           </FormDescription>
         </FormItem>
 
-        <Button type="submit" disabled={isPending || pending}>
-          {isPending ||
-            (pending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />)}
+        <Button type="submit" disabled={isPending}>
+          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Create Product
         </Button>
       </form>

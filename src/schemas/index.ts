@@ -114,6 +114,8 @@ export const ProductSchema = z.object({
     message: "Stock must be at least 1",
   }),
 
+  images: z.array(z.string())
+
   // image: z
   //   .any()
   //   .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Max image size is 5MB.`)
