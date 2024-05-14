@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 import { ProductSchema } from "@/schemas";
 import { Loader2 } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
-import { toast } from "../ui/use-toast";
+import { toastFunction } from "../toastfunction";
 import ImageUploader from "./image-uploader";
 
 export function CreateProductForm() {
@@ -36,27 +36,23 @@ export function CreateProductForm() {
     },
   });
 
-  const toastFunction = (
-    title: string,
-    variant?: "default" | "success" | "destructive"
-  ) => {
-    toast({
-      title,
-      variant,
-      duration: 3000,
-    });
-  };
-
   const onSubmit = (data: z.infer<typeof ProductSchema>) => {
     startTransition(() => {
       // setPending(true);
 
       // Simulating an asynchronous request
       setTimeout(() => {
-        const success = Math.random() < 0.9;
+        const success = Math.random() < 1;
 
         if (success) {
-          imageUploaderRef.current.uploadImage();
+          const status = imageUploaderRef.current.uploadImage();
+          console.log(status);
+
+          if (status && status.error) {
+            toastFunction(status.error, "destructive");
+            return;
+          }
+
           toastFunction("Request successful!", "success");
         } else {
           toastFunction("Request failed! An error occurred.", "destructive");

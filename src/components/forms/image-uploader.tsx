@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Image, Loader2, MousePointerSquareDashed, X } from "lucide-react";
 import {
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useState,
   useTransition,
@@ -26,6 +27,10 @@ const ImageUploader = forwardRef<any, ImageUploaderProps>(({}, ref) => {
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [files, setFiles] = useState<PreviewFile[]>([]);
   const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    console.log(files);
+  }, [files]);
 
   const { startUpload, isUploading } = useUploadThing("imageUploader", {
     onClientUploadComplete: ([data]) => {
@@ -75,11 +80,13 @@ const ImageUploader = forwardRef<any, ImageUploaderProps>(({}, ref) => {
   };
 
   const uploadImage = () => {
-    if (files.length) {
+    if (files.length && files.length <= 4) {
       startUpload(files, { configId: undefined });
       removeAllFiles();
+    } else if (files.length > 4) {
+      return { error: "You can only upload 4 images at a time!" };
     } else {
-      toastFunction("No files to upload!", "destructive");
+      return { error: "No files to upload!" };
     }
   };
 
