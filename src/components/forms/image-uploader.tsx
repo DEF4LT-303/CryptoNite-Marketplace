@@ -3,13 +3,7 @@
 import { useUploadThing } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
 import { Image, Loader2, MousePointerSquareDashed, X } from "lucide-react";
-import {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-  useTransition,
-} from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 import Dropzone, { FileRejection } from "react-dropzone";
 import { toastFunction } from "../toastfunction";
 import { Progress } from "../ui/progress";
@@ -26,18 +20,11 @@ const ImageUploader = forwardRef<any, ImageUploaderProps>(({}, ref) => {
   const [isDragOver, setIsDragOver] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [files, setFiles] = useState<PreviewFile[]>([]);
-  const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    console.log(files);
-  }, [files]);
 
   const { startUpload, isUploading } = useUploadThing("imageUploader", {
     onClientUploadComplete: ([data]) => {
-      const configId = data.serverData.configId;
-      startTransition(() => {
-        return;
-      });
+      const url = data.serverData.url;
+      return url;
     },
     onUploadProgress(p) {
       setUploadProgress(p);
@@ -79,10 +66,14 @@ const ImageUploader = forwardRef<any, ImageUploaderProps>(({}, ref) => {
     setFiles([]);
   };
 
-  const uploadImage = () => {
+  const uploadImage = async () => {
     if (files.length && files.length <= 4) {
-      startUpload(files, { configId: undefined });
+      const uploadedFiles = await startUpload(files, { configId: undefined }); // Get all metadatas
+      const uploadUrls = uploadedFiles?.map((file) => file.url); // Get all urls as an array
+
       removeAllFiles();
+
+      return { uploadUrls };
     } else if (files.length > 4) {
       return { error: "You can only upload 4 images at a time!" };
     } else {
@@ -122,7 +113,7 @@ const ImageUploader = forwardRef<any, ImageUploaderProps>(({}, ref) => {
                 <input {...getInputProps()} />
                 {isDragOver ? (
                   <MousePointerSquareDashed className="w-6 h-6 mb-2" />
-                ) : isUploading || isPending ? (
+                ) : isUploading ? (
                   <Loader2 className="animate-spin w-6 h-6" />
                 ) : (
                   <Image className="w-6 h-6 mb-2 text-primary/50" />
@@ -133,10 +124,6 @@ const ImageUploader = forwardRef<any, ImageUploaderProps>(({}, ref) => {
                     <div className="flex flex-col items-center">
                       <p>Uploading...</p>
                       <Progress value={uploadProgress} className="mt-2 w-40" />
-                    </div>
-                  ) : isPending ? (
-                    <div className="flex flex-col items-center">
-                      <p>Redirecting, please wait...</p>
                     </div>
                   ) : isDragOver ? (
                     <p>

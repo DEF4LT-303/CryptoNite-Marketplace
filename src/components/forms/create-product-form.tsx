@@ -36,17 +36,17 @@ export function CreateProductForm() {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof ProductSchema>) => {
+  const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
     startTransition(() => {
       // setPending(true);
 
       // Simulating an asynchronous request
-      setTimeout(() => {
+      setTimeout(async () => {
         const success = Math.random() < 1;
 
         if (success) {
-          const status = imageUploaderRef.current.uploadImage();
-          console.log(status);
+          const status = await imageUploaderRef.current.uploadImage();
+          console.log("status", status.uploadUrls);
 
           if (status && status.error) {
             toastFunction(status.error, "destructive");
