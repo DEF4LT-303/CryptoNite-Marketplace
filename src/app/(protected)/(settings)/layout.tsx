@@ -16,18 +16,22 @@ const sidebarNavItems = [
   {
     title: "Profile",
     href: "/profile",
+    isAdmin: false,
   },
   {
     title: "Orders",
     href: "/orders",
+    isAdmin: false,
   },
   {
-    title: "History",
-    href: "/history",
+    title: "Create Product",
+    href: "/create-product",
+    isAdmin: true,
   },
   {
     title: "Settings",
     href: "/settings",
+    isAdmin: false,
   },
 ];
 

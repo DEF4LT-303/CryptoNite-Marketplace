@@ -21,7 +21,7 @@ import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState, useTransition } from "react";
-import { toast } from "../ui/use-toast";
+import { toastFunction } from "../toastfunction";
 
 export function ProfileForm() {
   const [isPending, startTransition] = useTransition();
@@ -45,17 +45,6 @@ export function ProfileForm() {
     form.setValue("name", user?.name || "");
     form.setValue("email", user?.email || "");
   }, [user]);
-
-  const toastFunction = (
-    title: string,
-    variant?: "default" | "success" | "destructive"
-  ) => {
-    toast({
-      title,
-      variant,
-      duration: 3000,
-    });
-  };
 
   const onSubmit = (data: z.infer<typeof ProfileSchema>) => {
     startTransition(() => {
