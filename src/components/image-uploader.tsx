@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import { Image, Loader2, MousePointerSquareDashed, X } from "lucide-react";
 import { forwardRef, useImperativeHandle, useState } from "react";
 import Dropzone, { FileRejection } from "react-dropzone";
-import { toastFunction } from "../toastfunction";
-import { Progress } from "../ui/progress";
+import { toastFunction } from "./toastfunction";
+import { Progress } from "./ui/progress";
 
 interface PreviewFile extends File {
   preview: string; // Adding the preview property to the File interface

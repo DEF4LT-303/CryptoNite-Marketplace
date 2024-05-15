@@ -81,7 +81,7 @@ async function main() {
   try {
     await deleteOrders();
     await deleteProducts();
-    await createProducts();
+    // await createProducts();
     await createOrders();
   } catch (error) {
     console.error("Error seeding data:", error);

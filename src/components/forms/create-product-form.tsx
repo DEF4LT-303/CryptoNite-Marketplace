@@ -19,8 +19,8 @@ import { ProductSchema } from "@/schemas";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useRef, useTransition } from "react";
+import ImageUploader from "../image-uploader";
 import { toastFunction } from "../toastfunction";
-import ImageUploader from "./image-uploader";
 
 export function CreateProductForm() {
   const [isPending, startTransition] = useTransition();
