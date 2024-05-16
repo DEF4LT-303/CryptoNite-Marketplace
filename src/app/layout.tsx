@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/settings/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as DefaultToaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
+import { NextUIProvider } from "@nextui-org/react";
 import type { Metadata } from "next";
 import { SessionProvider } from "next-auth/react";
 import { Inter } from "next/font/google";
@@ -37,9 +38,11 @@ export default async function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <main className="relative flex flex-col min-h-screen">
-              <div className="flex-grow flex-1">{children}</div>
-            </main>
+            <NextUIProvider>
+              <main className="bg-background">
+                <div className="">{children}</div>
+              </main>
+            </NextUIProvider>
             <Toaster />
             <DefaultToaster />
           </ThemeProvider>
