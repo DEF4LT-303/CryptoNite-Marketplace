@@ -28,3 +28,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: error });
   }
 }
+
+export async function GET() {
+  const products = await db.product.findMany();
+
+  return NextResponse.json(products);
+}
