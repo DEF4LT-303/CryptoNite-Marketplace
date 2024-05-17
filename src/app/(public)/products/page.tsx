@@ -1,5 +1,6 @@
 "use client";
 
+import Wallet from "@/components/Wallet";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,15 +22,25 @@ interface Product {
 const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
+  const [state,setState]=useState<{ web3: any | null; contract: any | null }>({
+    web3:null,
+    contract:null
+  })
+
+  const saveState=(state:{web3:any;contract:any})=>{
+    console.log(state);
+    setState(state);
+  }
+
   useEffect(() => {
     axios.get("/api/product").then((res) => {
       setProducts(res.data);
     });
   });
 
-  const onClick = () => {
-    console.log("clicked");
-  };
+  // const onClick = () => {
+  //   console.log("clicked");
+  // };
 
   return (
     <div className="flex justify-center items-center">
@@ -52,9 +63,7 @@ const ProductPage = () => {
               />
             </CardBody>
             <CardFooter className="flex justify-center">
-              <Button className="w-full" variant="default" onClick={onClick}>
-                Purchase
-              </Button>
+                <Wallet saveState = {saveState}/>
             </CardFooter>
           </Card>
         ))}
