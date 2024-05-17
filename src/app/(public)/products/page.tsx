@@ -39,9 +39,9 @@ const ProductPage = () => {
     });
   },[]);
   
-  // const onClick = () => {
-  //   console.log("clicked");
-  // };
+  const purchase = (name) => {
+    console.log(name);
+  };
 
   return (
     <div className="flex justify-center items-center">
@@ -64,7 +64,10 @@ const ProductPage = () => {
               />
             </CardBody>
             <CardFooter className="flex justify-center">
-                <Wallet saveState = {saveState}/>
+              {!state.web3 && !state.contract && !state.account?(<Wallet saveState = {saveState}/>):(<Button onClick={()=>purchase(product.name)} className="w-full" variant="default">
+                    Purchase
+                </Button>)}
+                
             </CardFooter>
           </Card>
         ))}
