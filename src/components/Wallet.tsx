@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTrigger } from "./ui/di
 import React from 'react'
 
 interface WalletProps {
-    saveState: (state: { web3: any; contract: any; }) => void;
+    saveState: (state: { web3: any; contract: any; account:string}) => void;
   }
 const Wallet = ({saveState}:WalletProps) => {
     const [connected,setConnected]=useState<boolean>(true);
@@ -27,7 +27,7 @@ const Wallet = ({saveState}:WalletProps) => {
             console.log(contract);
             
             setConnected(false)
-            saveState({web3:web3, contract:contract})
+            saveState({web3:web3, contract:contract, account:accounts[0]})
             setAccount(accounts[0])
             
         } catch (error) {
@@ -38,7 +38,7 @@ const Wallet = ({saveState}:WalletProps) => {
         <Dialog>
             <DialogContent>
                 <DialogDescription className="flex justify-center items-center">
-                    <Button className="w-50" variant="default">
+                    <Button className="w-50" variant="default" onClick={init}>
                         Connect To Wallet
                     </Button>
                 </DialogDescription>

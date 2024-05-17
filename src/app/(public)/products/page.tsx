@@ -22,12 +22,13 @@ interface Product {
 const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
-  const [state,setState]=useState<{ web3: any | null; contract: any | null }>({
+  const [state,setState]=useState<{ web3: any | null; contract: any | null; account:string|null }>({
     web3:null,
-    contract:null
+    contract:null,
+    account:null
   })
 
-  const saveState=(state:{web3:any;contract:any})=>{
+  const saveState=(state:{web3:any;contract:any;account:string})=>{
     console.log(state);
     setState(state);
   }
@@ -36,8 +37,8 @@ const ProductPage = () => {
     axios.get("/api/product").then((res) => {
       setProducts(res.data);
     });
-  });
-
+  },[]);
+  
   // const onClick = () => {
   //   console.log("clicked");
   // };
@@ -67,6 +68,9 @@ const ProductPage = () => {
             </CardFooter>
           </Card>
         ))}
+      </div>
+      <div>
+        <h1>Connected to Account = {state.account?`${state.account}`:"not connected"}</h1>
       </div>
     </div>
   );
