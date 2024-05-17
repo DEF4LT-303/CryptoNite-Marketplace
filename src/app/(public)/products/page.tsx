@@ -39,8 +39,19 @@ const ProductPage = () => {
     });
   },[]);
   
-  const purchase = (name) => {
-    console.log(name);
+  const purchase = async() => {
+    // event.preventDefault();
+        try{
+            const {contract,web3}=state;
+            const eth = 0.1;
+            const weiValue=web3.utils.toWei(eth,"ether");
+            // const accounts = await web3.eth.getAccounts();
+            await contract.methods.donate().send({from:state.account,value:weiValue,gas:480000});
+            alert("Transaction Succesful");
+        }
+    catch(error){
+       alert("Transaction Not Succesful");
+    }
   };
 
   return (
