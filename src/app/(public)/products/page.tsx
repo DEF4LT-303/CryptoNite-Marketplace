@@ -35,22 +35,35 @@ const ProductPage = () => {
 
   useEffect(() => {
     axios.get("/api/product").then((res) => {
+      
       setProducts(res.data);
     });
+    
   },[]);
   
-  const purchase = async() => {
+  const purchase = async(id) => {
     // event.preventDefault();
         try{
             const {contract,web3}=state;
-            const eth = 0.1;
-            const weiValue=web3.utils.toWei(eth,"ether");
-            // const accounts = await web3.eth.getAccounts();
-            await contract.methods.donate().send({from:state.account,value:weiValue,gas:480000});
-            alert("Transaction Succesful");
+            // const eth = 0.1;
+            // const weiValue=web3.utils.toWei(eth,"ether");
+            // // const accounts = await web3.eth.getAccounts();
+            // await contract.methods.donate().send({from:state.account,value:weiValue,gas:480000});
+            console.log("sending ether");
+            
+            const data = {
+              id: id, 
+            };
+          
+            const result = await axios.post("/api/cryptoPurchase", data
+         // Specify JSON content type
+            );
+            console.log(result);
+            
+            alert("Transaction Succesful your nft has been minted");
         }
     catch(error){
-       alert("Transaction Not Succesful");
+       alert("Transaction failed");
     }
   };
 
@@ -75,7 +88,7 @@ const ProductPage = () => {
               />
             </CardBody>
             <CardFooter className="flex justify-center">
-              {!state.web3 && !state.contract && !state.account?(<Wallet saveState = {saveState}/>):(<Button onClick={()=>purchase(product.name)} className="w-full" variant="default">
+              {!state.web3 && !state.contract && !state.account?(<Wallet saveState = {saveState}/>):(<Button onClick={()=>purchase(product.id)} className="w-full" variant="default">
                     Purchase
                 </Button>)}
                 
