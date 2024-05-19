@@ -45,14 +45,13 @@ const ProductPage = () => {
     // event.preventDefault();
         try{
             const {contract,web3}=state;
-            // const eth = 0.1;
-            // const weiValue=web3.utils.toWei(eth,"ether");
-            // // const accounts = await web3.eth.getAccounts();
-            // await contract.methods.donate().send({from:state.account,value:weiValue,gas:480000});
-            console.log("sending ether");
+            const eth = 0.1;
+            const weiValue=web3.utils.toWei(eth,"ether");
+            await contract.methods.donate().send({from:state.account,value:weiValue,gas:480000});
             
             const data = {
-              id: id, 
+              id: id,
+              walletAddress: state.account 
             };
           
             const result = await axios.post("/api/cryptoPurchase", data

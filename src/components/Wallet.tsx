@@ -32,7 +32,7 @@ const Wallet = ({ saveState }: WalletProps) => {
             setAccount(accounts[0])
 
         } catch (error) {
-            alert("Please install metamask")
+            alert("You don't have metamask")
         }
     }
     return (
