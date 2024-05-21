@@ -1,11 +1,14 @@
 "use client";
+
+import { useCart } from "@/hooks/use-cart";
 import { formatPrice } from "@/lib/utils";
 import { Badge } from "@nextui-org/react";
+import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Separator } from "@radix-ui/react-separator";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { buttonVariants } from "./ui/button";
+import { buttonVariants } from "../ui/button";
 import {
   Sheet,
   SheetContent,
@@ -13,31 +16,16 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "./ui/sheet";
-
-const cartItems = [
-  {
-    id: 1,
-    name: "Product 1",
-    price: 10,
-    quantity: 1,
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    price: 20,
-    quantity: 1,
-  },
-  {
-    id: 3,
-    name: "Product 3",
-    price: 30,
-    quantity: 1,
-  },
-];
+} from "../ui/sheet";
+import CartItem from "./cart-item";
 
 const Cart = () => {
-  const itemCount = cartItems.length;
+  const { items } = useCart();
+  const itemCount = items.length;
+  const cartTotal = items.reduce(
+    (total, { product }) => total + product.price,
+    0
+  );
   const fee = 1;
 
   return (
@@ -51,7 +39,7 @@ const Cart = () => {
             color="primary"
             content={itemCount}
             shape="circle"
-            className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 bg-red-500 text-primary-background text-sm rounded-full shadow-md"
+            className="absolute top-1 -right-0 flex items-center justify-center w-5 h-5 bg-red-500 text-primary-background text-sm rounded-full shadow-md"
           >
             <ShoppingCart className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
           </Badge>
@@ -65,7 +53,13 @@ const Cart = () => {
         </SheetHeader>
         {itemCount > 0 ? (
           <>
-            <div className="flex w-full flex-col pr-6">cart items</div>
+            <div className="flex w-full flex-col pr-6">
+              <ScrollArea>
+                {items.map(({ product }) => (
+                  <CartItem key={product.id} product={product} />
+                ))}
+              </ScrollArea>
+            </div>
 
             <div className="space-y-4 pr-6">
               <Separator />
@@ -81,7 +75,7 @@ const Cart = () => {
 
                 <div className="flex">
                   <span className="flex-1">Total</span>
-                  <span>{formatPrice(fee)}</span>
+                  <span>{formatPrice(cartTotal + fee)}</span>
                 </div>
               </div>
               <SheetFooter>

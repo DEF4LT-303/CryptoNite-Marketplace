@@ -4,7 +4,7 @@ import Link from "next/link";
 
 import NavItems from "@/components/navigation/navItems";
 import UserButton from "@/components/user-button";
-import Cart from "../cart";
+import Cart from "../cart/cart";
 import { Icons } from "../icons";
 import MaxWidthWrapper from "../max-width-wrapper";
 import { buttonVariants } from "../ui/button";

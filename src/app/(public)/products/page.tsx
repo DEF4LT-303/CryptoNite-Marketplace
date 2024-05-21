@@ -1,5 +1,6 @@
 "use client";
 
+import AddToCartButton from "@/components/cart/add-to-cart";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,15 +9,9 @@ import {
   CardHeader,
   Image,
 } from "@nextui-org/react";
+import { Product } from "@prisma/client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-interface Product {
-  name: string;
-  description: string;
-  price: number;
-  images: string[];
-}
 
 const ProductPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -51,10 +46,11 @@ const ProductPage = () => {
                 width={270}
               />
             </CardBody>
-            <CardFooter className="flex justify-center">
+            <CardFooter className="flex justify-center flex-col gap-4">
               <Button className="w-full" variant="default" onClick={onClick}>
                 Purchase
               </Button>
+              <AddToCartButton product={product} />
             </CardFooter>
           </Card>
         ))}
