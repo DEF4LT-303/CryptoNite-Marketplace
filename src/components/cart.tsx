@@ -1,5 +1,6 @@
 "use client";
 import { formatPrice } from "@/lib/utils";
+import { Badge } from "@nextui-org/react";
 import { Separator } from "@radix-ui/react-separator";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
@@ -14,24 +15,53 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 
-const Cart = () => {
-  const itemCount = 0;
+const cartItems = [
+  {
+    id: 1,
+    name: "Product 1",
+    price: 10,
+    quantity: 1,
+  },
+  {
+    id: 2,
+    name: "Product 2",
+    price: 20,
+    quantity: 1,
+  },
+  {
+    id: 3,
+    name: "Product 3",
+    price: 30,
+    quantity: 1,
+  },
+];
 
+const Cart = () => {
+  const itemCount = cartItems.length;
   const fee = 1;
+
   return (
     <Sheet>
       <SheetTrigger
         aria-hidden="true"
-        className="group -m-2 flex items-center p-2"
+        className="group -m-2 flex items-center p-2 relative"
       >
-        <ShoppingCart className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
-        <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-          0
-        </span>
+        {itemCount > 0 ? (
+          <Badge
+            color="primary"
+            content={itemCount}
+            shape="circle"
+            className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 bg-red-500 text-primary-background text-sm rounded-full shadow-md"
+          >
+            <ShoppingCart className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
+          </Badge>
+        ) : (
+          <ShoppingCart className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
+        )}
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg">
         <SheetHeader className="space-y-2.5 pr-6">
-          <SheetTitle> Cart (0)</SheetTitle>
+          <SheetTitle> Cart</SheetTitle>
         </SheetHeader>
         {itemCount > 0 ? (
           <>

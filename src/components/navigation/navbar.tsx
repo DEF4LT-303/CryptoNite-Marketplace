@@ -76,7 +76,7 @@ const Navbar = ({ user }: any) => {
                   </div>
                 </div>
                 <div className="lg:hidden">
-                  <div className="flex gap-5">
+                  <div className="flex gap-5 mr-2">
                     {user && (
                       <>
                         <Link href="/profile" legacyBehavior passHref>
