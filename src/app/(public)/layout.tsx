@@ -10,7 +10,7 @@ export default async function GeneralLayout({
   const session = await auth();
 
   return (
-    <section>
+    <section className="flex flex-col min-h-screen">
       <Navbar user={session} />
       {children}
       <Footer />

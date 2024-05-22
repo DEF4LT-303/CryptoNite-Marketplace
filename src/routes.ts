@@ -30,3 +30,6 @@ export const apiAuthPrefix = "/api/auth"
  * @type {string[]}
  */
 export const DEFAULT_LOGIN_REDIRECT = "/"
+
+
+//This is a new comment that I have written
