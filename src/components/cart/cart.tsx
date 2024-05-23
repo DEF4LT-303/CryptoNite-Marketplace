@@ -3,12 +3,12 @@
 import { useCart } from "@/hooks/use-cart";
 import { formatPrice } from "@/lib/utils";
 import { Badge } from "@nextui-org/react";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Separator } from "@radix-ui/react-separator";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { buttonVariants } from "../ui/button";
+import { ScrollArea } from "../ui/scroll-area";
 import {
   Sheet,
   SheetContent,

@@ -2,11 +2,12 @@
 
 import AddToCartButton from "@/components/cart/add-to-cart";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -20,50 +21,69 @@ import {
 } from "@nextui-org/react";
 import { Product } from "@prisma/client";
 import axios from "axios";
+import { Clock, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
 
-const invoices = [
+const orders = [
   {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
+    price: 0.5,
+    usd_price: 770,
+    time: "Processing",
+    from: "John Doe",
   },
   {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
+    price: 0.3,
+    usd_price: 770,
+    time: "21h ago",
+    from: "Jane Smith",
   },
   {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
+    price: 0.6,
+    usd_price: 770,
+    time: "5m ago",
+    from: "Samantha Martinez",
   },
   {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
+    price: 0.6,
+    usd_price: 770,
+    time: "5m ago",
+    from: "Samantha Martinez",
   },
   {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
+    price: 0.3,
+    usd_price: 770,
+    time: "21h ago",
+    from: "Jane Smith",
   },
   {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
+    price: 0.6,
+    usd_price: 770,
+    time: "5m ago",
+    from: "Samantha Martinez",
   },
   {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
+    price: 0.3,
+    usd_price: 770,
+    time: "21h ago",
+    from: "Jane Smith",
+  },
+  {
+    price: 0.6,
+    usd_price: 770,
+    time: "5m ago",
+    from: "Samantha Martinez",
+  },
+  {
+    price: 0.6,
+    usd_price: 770,
+    time: "5m ago",
+    from: "Samantha Martinez",
+  },
+  {
+    price: 0.6,
+    usd_price: 770,
+    time: "5m ago",
+    from: "Samantha Martinez",
   },
 ];
 
@@ -94,24 +114,34 @@ const ProductPage = ({
   return (
     <MaxWidthWrapper>
       <div className="flex flex-col gap-4 my-5">
-        <div className="flex gap-4">
-          <Card className="py-4 my-5 bg-primary-foreground rounded-sm">
-            <CardBody className="overflow-visible py-2">
-              <Image
-                alt="Card background"
-                className="object-cover rounded-xl h-[230px]"
-                src={product.images[0]}
-                width={270}
-              />
-            </CardBody>
-            <CardFooter className="flex justify-center flex-col gap-4">
-              <AddToCartButton product={product} />
-            </CardFooter>
+        <div className="flex flex-col md:flex-row md:gap-4">
+          <Card className="md:my-5 bg-primary-foreground rounded-sm border md:w-[450px]">
+            <Image
+              alt={product.name}
+              className="w-full object-cover h-[340px]"
+              shadow="sm"
+              radius="none"
+              width="100%"
+              src={product.images[0]}
+            />
           </Card>
 
-          <Card className="py-4 my-5 bg-primary-foreground flex-grow rounded-sm">
-            <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
-              <h1>Description</h1>
+          <Card className="py-4 my-5 bg-primary-foreground flex-grow rounded-sm border">
+            <CardHeader className="flex justify-between items-start text-lg">
+              <div className="flex items-center gap-2">
+                <Clock size={24} />
+                <b>Sale ends</b>{" "}
+                <span className="text-primary-500">
+                  {new Date(product.createdAt).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </span>
+              </div>
+              <div>
+                <AddToCartButton product={product} />
+              </div>
             </CardHeader>
             <CardBody>
               <p className="font-bold text-large">{product.name}</p>
@@ -120,39 +150,53 @@ const ProductPage = ({
               </p>
               <small className="text-default-500">$ {product.price}</small>
             </CardBody>
+            <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex w-full sm:w-1/2">
+                <Button className="flex-grow bg-blue-500 hover:bg-blue-400">
+                  Buy Now
+                </Button>
+              </div>
+              <Button
+                variant="secondary"
+                className="w-full sm:w-1/2 flex items-center gap-2"
+              >
+                <Tag size={16} />
+                Place order
+              </Button>
+            </CardFooter>
           </Card>
         </div>
 
         <div className="border">
           <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[100px]">Invoice</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {invoices.map((invoice) => (
-                <TableRow key={invoice.invoice}>
-                  <TableCell className="font-medium">
-                    {invoice.invoice}
-                  </TableCell>
-                  <TableCell>{invoice.paymentStatus}</TableCell>
-                  <TableCell>{invoice.paymentMethod}</TableCell>
-                  <TableCell className="text-right">
-                    {invoice.totalAmount}
-                  </TableCell>
+            <ScrollArea className="h-[400px]">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="w-[100px]">Price</TableHead>
+                  <TableHead>Price (USD)</TableHead>
+                  <TableHead>Time</TableHead>
+                  <TableHead className="text-right">User</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-            <TableFooter>
+              </TableHeader>
+              <TableBody>
+                {orders.map((order) => (
+                  <TableRow key={order.price}>
+                    <TableCell className="font-medium">
+                      {order.price} ETH
+                    </TableCell>
+                    <TableCell>$ {order.usd_price}</TableCell>
+                    <TableCell>{order.time}</TableCell>
+                    <TableCell className="text-right">{order.from}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </ScrollArea>
+            {/* <TableFooter>
               <TableRow>
                 <TableCell colSpan={3}>Total</TableCell>
                 <TableCell className="text-right">$2,500.00</TableCell>
               </TableRow>
-            </TableFooter>
+            </TableFooter> */}
           </Table>
         </div>
       </div>

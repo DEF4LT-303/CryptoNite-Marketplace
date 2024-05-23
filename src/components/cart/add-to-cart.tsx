@@ -2,31 +2,27 @@
 
 import { useCart } from "@/hooks/use-cart";
 import { Product } from "@prisma/client";
-import { useEffect, useState } from "react";
+import { ShoppingCart } from "lucide-react";
 import { Button } from "../ui/button";
 
 const AddToCartButton = ({ product }: { product: Product }) => {
-  const { addItem } = useCart();
-  const [isSuccess, setIsSuccess] = useState(false);
+  const { items, addItem } = useCart();
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsSuccess(false);
-    }, 3000);
-    return () => clearTimeout(timeout);
-  }, [isSuccess]);
+  const isProductInCart = (productId: string) => {
+    return items.some((item) => item.product.id === productId);
+  };
 
   return (
     <Button
-      className="w-full hover:bg-emerald-400"
-      variant="default"
-      disabled={isSuccess}
+      className="w-full hover:text-muted-foreground"
+      variant="ghost"
+      disabled={isProductInCart(product.id)}
       onClick={() => {
         addItem(product);
-        setIsSuccess(true);
       }}
     >
-      {isSuccess ? "Added to cart" : "Add to cart"}
+      {/* {isSuccess ? "Added to cart" : "Add to cart"} */}
+      <ShoppingCart />
     </Button>
   );
 };
