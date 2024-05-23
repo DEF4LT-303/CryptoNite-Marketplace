@@ -1,3 +1,4 @@
+import { getProductById } from "@/data/product";
 import { db } from "@/lib/db";
 import { ProductSchema } from "@/schemas";
 import { NextResponse } from "next/server";
@@ -29,8 +30,23 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET() {
-  const products = await db.product.findMany();
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
 
-  return NextResponse.json(products);
+  console.log(id);
+
+  if (id) {
+    const product = await getProductById(id);
+
+    if (!product) {
+      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(product);
+  } else {
+    const products = await db.product.findMany();
+
+    return NextResponse.json(products);
+  }
 }

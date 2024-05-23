@@ -18,8 +18,9 @@ const AddToCartButton = ({ product }: { product: Product }) => {
 
   return (
     <Button
-      className="w-full"
+      className="w-full hover:bg-emerald-400"
       variant="default"
+      disabled={isSuccess}
       onClick={() => {
         addItem(product);
         setIsSuccess(true);
