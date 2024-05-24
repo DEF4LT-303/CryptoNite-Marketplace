@@ -31,7 +31,7 @@ const PRODUCTS = [
 
 const ORDERS = [
   {
-    "userId": "66194ba08d9e4f9af96e02f5",
+    "userId": "65fd9c7457c475e79566980d",
     "total": 1999.98,
     "productId": "60c9b4744a2d2b0015b3b9d2"
   },
@@ -41,11 +41,36 @@ const ORDERS = [
     "productId": "60c9b4744a2d2b0015b3b9d4"
   },
   {
-    "userId": "65fd9c7457c475e79566980d",
+    "userId": "66194ba08d9e4f9af96e02f5",
     "total": 139.98,
     "productId": "60c9b4744a2d2b0015b3b9d3"
   }
 ];
+
+const DUMMY_OFFERS = [
+  {
+    userId: "66194ba08d9e4f9af96e02f5",
+    productId: "60c9b4744a2d2b0015b3b9d2",
+    price: 59.99,
+    price_usd: 59.99,
+
+  },
+  {
+    userId: "65fd9c7457c475e79566980d",
+    productId: "60c9b4744a2d2b0015b3b9d3",
+    price: 64.99,
+    price_usd: 64.99,
+
+  },
+  {
+    userId: "66194ba08d9e4f9af96e02f5",
+    productId: "60c9b4744a2d2b0015b3b9d4",
+    price: 139.99,
+    price_usd: 139.99,
+
+  }
+];
+
 
 async function createProducts() {
 
@@ -77,12 +102,30 @@ async function deleteOrders() {
   console.log("Orders deleted successfully");
 }
 
+async function createOffers() {
+  for (const offer of DUMMY_OFFERS) {
+    await prisma.offers.create({ data: offer });
+  }
+
+  console.log("Offers seeded successfully");
+}
+
+async function deleteOffers() {
+  await prisma.offers.deleteMany({});
+
+  console.log("Offers deleted successfully");
+}
+
+
+
 async function main() {
   try {
     await deleteOrders();
-    await deleteProducts();
+    // await deleteProducts();
     // await createProducts();
     await createOrders();
+    await deleteOffers();
+    await createOffers();
   } catch (error) {
     console.error("Error seeding data:", error);
   } finally {

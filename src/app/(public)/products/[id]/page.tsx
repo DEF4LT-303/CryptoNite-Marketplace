@@ -19,7 +19,7 @@ import {
   CardHeader,
   Image,
 } from "@nextui-org/react";
-import { Product } from "@prisma/client";
+import { Offers, Product } from "@prisma/client";
 import axios from "axios";
 import { Clock, Tag } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -87,6 +87,8 @@ const orders = [
   },
 ];
 
+type OffersProps = Offers & { user: { name: string } };
+
 const ProductPage = ({
   params,
 }: {
@@ -95,6 +97,7 @@ const ProductPage = ({
   };
 }) => {
   const [product, setProduct] = useState<Product | null>(null);
+  const [offers, setOffers] = useState<OffersProps[]>([]);
 
   useEffect(() => {
     axios
@@ -104,6 +107,15 @@ const ProductPage = ({
       })
       .catch((err) => {
         console.error("Error fetching product:", err);
+      });
+
+    axios
+      .get(`/api/offers?id=${params.id}`)
+      .then((res) => {
+        setOffers(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching offers:", err);
       });
   }, []);
 
@@ -178,18 +190,32 @@ const ProductPage = ({
                   <TableHead className="text-right">User</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
-                {orders.map((order) => (
-                  <TableRow key={order.price}>
-                    <TableCell className="font-medium">
-                      {order.price} ETH
-                    </TableCell>
-                    <TableCell>$ {order.usd_price}</TableCell>
-                    <TableCell>{order.time}</TableCell>
-                    <TableCell className="text-right">{order.from}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
+              {offers && offers.length !== 0 ? (
+                <TableBody>
+                  {offers.map((offer) => (
+                    <TableRow key={offer.id}>
+                      <TableCell className="font-medium">
+                        {offer?.price} ETH
+                      </TableCell>
+                      <TableCell>$ {offer.price_usd}</TableCell>
+                      <TableCell>
+                        {new Date(offer.createdAt).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        {offer.user.name}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              ) : (
+                <div className="flex items-center justify-center">
+                  No Offers
+                </div>
+              )}
             </ScrollArea>
             {/* <TableFooter>
               <TableRow>
