@@ -50,21 +50,21 @@ const ORDERS = [
 const DUMMY_OFFERS = [
   {
     userId: "66194ba08d9e4f9af96e02f5",
-    productId: "60c9b4744a2d2b0015b3b9d2",
+    productId: "6645992abf29dd2dbbba7773",
     price: 59.99,
     price_usd: 59.99,
 
   },
   {
     userId: "65fd9c7457c475e79566980d",
-    productId: "60c9b4744a2d2b0015b3b9d3",
+    productId: "6645992abf29dd2dbbba7773",
     price: 64.99,
     price_usd: 64.99,
 
   },
   {
     userId: "66194ba08d9e4f9af96e02f5",
-    productId: "60c9b4744a2d2b0015b3b9d4",
+    productId: "6645992abf29dd2dbbba7773",
     price: 139.99,
     price_usd: 139.99,
 
