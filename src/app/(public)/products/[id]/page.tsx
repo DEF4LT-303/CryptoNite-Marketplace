@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useCurrentUser } from "@/hooks/currentUser";
 import {
   Card,
   CardBody,
@@ -98,7 +99,7 @@ const ProductPage = ({
 }) => {
   const [product, setProduct] = useState<Product | null>(null);
   const [offers, setOffers] = useState<OffersProps[]>([]);
-
+  const currentUser = useCurrentUser()
   useEffect(() => {
     axios
       .get(`/api/product?id=${params.id}`)
@@ -122,6 +123,25 @@ const ProductPage = ({
   if (!product) {
     return <div>Loading...</div>;
   }
+
+  
+  const bid = async (id:string) => {
+    const userId = currentUser?.id;
+    const name = currentUser?.name;
+    const productId = id;
+    const bidAmount = 0.013;
+    console.log(userId);
+
+    const data = {
+      userId: userId,
+      name:name,
+      productId: productId,
+      bidAmount: bidAmount
+    }
+    const result = await axios.post("/api/bid", data)
+    console.log(result);
+
+  };
 
   return (
     <MaxWidthWrapper>
@@ -168,7 +188,7 @@ const ProductPage = ({
                   Buy Now
                 </Button>
               </div>
-              <Button
+              <Button onClick={()=>bid(product.id)}
                 variant="secondary"
                 className="w-full sm:w-1/2 flex items-center gap-2"
               >
@@ -195,11 +215,11 @@ const ProductPage = ({
                   {offers.map((offer) => (
                     <TableRow key={offer.id}>
                       <TableCell className="font-medium">
-                        {offer?.price} ETH
+                        {offer?.bidAmount} ETH
                       </TableCell>
-                      <TableCell>$ {offer.price_usd}</TableCell>
+                      <TableCell>$ convert to us dollar</TableCell>
                       <TableCell>
-                        {new Date(offer.createdAt).toLocaleDateString("en-GB", {
+                        {new Date(offer.timeStamp).toLocaleDateString("en-GB", {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
