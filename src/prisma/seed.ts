@@ -120,12 +120,12 @@ async function deleteOffers() {
 
 async function main() {
   try {
-    await deleteOrders();
+    // await deleteOrders();
     // await deleteProducts();
     // await createProducts();
-    await createOrders();
+    // await createOrders();
     await deleteOffers();
-    await createOffers();
+    // await createOffers();
   } catch (error) {
     console.error("Error seeding data:", error);
   } finally {

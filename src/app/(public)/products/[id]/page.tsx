@@ -2,6 +2,7 @@
 
 import AddToCartButton from "@/components/cart/add-to-cart";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { OfferDialogue } from "@/components/modals/offer-modal";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -101,6 +102,8 @@ const ProductPage = ({
   const [isPending, startTransition] = useTransition();
   const [isError, setIsError] = useState(false);
 
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   useEffect(() => {
     const fetchProduct = async () => {
       startTransition(() => {
@@ -147,6 +150,21 @@ const ProductPage = ({
       </div>
     );
   }
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = async () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleDialogSubmitSuccess = async () => {
+    if (!product) return;
+
+    const { data } = await axios.get(`/api/offers?id=${product.id}`);
+    setOffers(data);
+  };
 
   return (
     <MaxWidthWrapper>
@@ -197,10 +215,17 @@ const ProductPage = ({
                 <Button
                   variant="secondary"
                   className="w-full sm:w-1/2 flex items-center gap-2"
+                  onClick={handleOpenDialog}
                 >
                   <Tag size={16} />
                   Place order
                 </Button>
+                <OfferDialogue
+                  isOpen={isDialogOpen}
+                  onClose={handleCloseDialog}
+                  productId={product.id}
+                  onSubmitSuccess={handleDialogSubmitSuccess}
+                />
               </CardFooter>
             </Card>
           </div>

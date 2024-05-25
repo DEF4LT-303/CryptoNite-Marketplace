@@ -21,20 +21,18 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { userId, name, productId, bidAmount } = body;
+  const { userId, productId, price } = body;
 
-  const newBid = {
-    userId,
-    name,
-    productId,
-    bidAmount,
-  };
+  const price_usd = 770 * price;
 
   const createdBid = await db.offers.create({
-    data: newBid
+    data: {
+      userId,
+      productId,
+      price,
+      price_usd
+    }
   });
 
-  console.log(createdBid);
-
-  return NextResponse.json({ message: "done" })
+  return NextResponse.json({ message: "Bid placed" })
 }
