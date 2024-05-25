@@ -31,6 +31,5 @@ export async function POST(request: Request) {
 
 export async function GET() {
   const products = await db.product.findMany();
-
-  return NextResponse.json(products);
+  return NextResponse.json(products); 
 }
