@@ -99,11 +99,11 @@ model Order {
 model Offers {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String   @db.ObjectId
-  name      String
+  price     Float
+  price_usd Float
   productId String   @db.ObjectId
   product   Product  @relation(fields: [productId], references: [id])
-  bidAmount Float
-  timeStamp DateTime @default(now())
+  createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
