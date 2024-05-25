@@ -38,7 +38,7 @@ export async function GET(request: Request) {
     const product = await getProductById(id);
 
     if (!product) {
-      return NextResponse.json({ error: 'Product not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Product not found' });
     }
 
     return NextResponse.json(product);
