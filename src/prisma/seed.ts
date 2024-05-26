@@ -102,13 +102,6 @@ async function deleteOrders() {
   console.log("Orders deleted successfully");
 }
 
-async function createOffers() {
-  for (const offer of DUMMY_OFFERS) {
-    await prisma.offers.create({ data: offer });
-  }
-
-  console.log("Offers seeded successfully");
-}
 
 async function deleteOffers() {
   await prisma.offers.deleteMany({});
@@ -125,7 +118,6 @@ async function main() {
     // await createProducts();
     // await createOrders();
     await deleteOffers();
-    // await createOffers();
   } catch (error) {
     console.error("Error seeding data:", error);
   } finally {
