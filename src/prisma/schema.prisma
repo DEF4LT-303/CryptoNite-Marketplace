@@ -99,7 +99,7 @@ model Order {
 model Offers {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String   @db.ObjectId
-  price     Float
+  bidAmount Float
   price_usd Float
   productId String   @db.ObjectId
   product   Product  @relation(fields: [productId], references: [id])

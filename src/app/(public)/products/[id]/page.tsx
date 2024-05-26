@@ -25,69 +25,6 @@ import axios from "axios";
 import { Clock, Tag } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 
-const orders = [
-  {
-    price: 0.5,
-    usd_price: 770,
-    time: "Processing",
-    from: "John Doe",
-  },
-  {
-    price: 0.3,
-    usd_price: 770,
-    time: "21h ago",
-    from: "Jane Smith",
-  },
-  {
-    price: 0.6,
-    usd_price: 770,
-    time: "5m ago",
-    from: "Samantha Martinez",
-  },
-  {
-    price: 0.6,
-    usd_price: 770,
-    time: "5m ago",
-    from: "Samantha Martinez",
-  },
-  {
-    price: 0.3,
-    usd_price: 770,
-    time: "21h ago",
-    from: "Jane Smith",
-  },
-  {
-    price: 0.6,
-    usd_price: 770,
-    time: "5m ago",
-    from: "Samantha Martinez",
-  },
-  {
-    price: 0.3,
-    usd_price: 770,
-    time: "21h ago",
-    from: "Jane Smith",
-  },
-  {
-    price: 0.6,
-    usd_price: 770,
-    time: "5m ago",
-    from: "Samantha Martinez",
-  },
-  {
-    price: 0.6,
-    usd_price: 770,
-    time: "5m ago",
-    from: "Samantha Martinez",
-  },
-  {
-    price: 0.6,
-    usd_price: 770,
-    time: "5m ago",
-    from: "Samantha Martinez",
-  },
-];
-
 type OffersProps = Offers & { user: { name: string } };
 
 const ProductPage = ({
@@ -166,6 +103,35 @@ const ProductPage = ({
     setOffers(data);
   };
 
+  const time = (time:Date)=>{
+    const now: Date = new Date();
+    const offerDate: Date = new Date(time);
+    const diffInMs = now.getTime() - offerDate.getTime(); 
+
+    const seconds = Math.floor(diffInMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    let timeDifference;
+    if (days > 0) {
+      timeDifference = `${days} day${days > 1 ? 's' : ''} ago`;
+    } else if (hours > 0) {
+      timeDifference = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    } else if (minutes > 0) {
+      timeDifference = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    } else {
+      if(seconds === 0){
+        timeDifference = 'just now'
+      }
+      else{
+        timeDifference = `${seconds} seconds ago`;
+      }
+      
+    }
+    return timeDifference
+  }
+
   return (
     <MaxWidthWrapper>
       {product && (
@@ -235,8 +201,8 @@ const ProductPage = ({
               <ScrollArea className="h-[400px]">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[100px]">Price</TableHead>
-                    <TableHead>Price (USD)</TableHead>
+                    <TableHead className="w-[100px]">Bid value</TableHead>
+                    <TableHead>In USD</TableHead>
                     <TableHead>Time</TableHead>
                     <TableHead className="text-right">User</TableHead>
                   </TableRow>
@@ -246,18 +212,11 @@ const ProductPage = ({
                     {offers.map((offer) => (
                       <TableRow key={offer.id}>
                         <TableCell className="font-medium">
-                          {offer?.price} ETH
+                          {offer?.bidAmount} ETH
                         </TableCell>
                         <TableCell>$ {offer.price_usd}</TableCell>
                         <TableCell>
-                          {new Date(offer.createdAt).toLocaleDateString(
-                            "en-GB",
-                            {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            }
-                          )}
+                          {time(offer.createdAt)}
                         </TableCell>
                         <TableCell className="text-right">
                           {offer.user.name}

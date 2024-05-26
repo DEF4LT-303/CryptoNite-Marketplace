@@ -51,7 +51,7 @@ export function OfferDialogue({
     const bid = {
       userId: user.id,
       productId,
-      price: bidAmount,
+      bidAmount: bidAmount,
     };
 
     try {

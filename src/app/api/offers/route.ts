@@ -21,15 +21,15 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { userId, productId, price } = body;
+  const { userId, productId, bidAmount } = body;
 
-  const price_usd = 770 * price;
+  const price_usd = 770 * bidAmount;
 
   const createdBid = await db.offers.create({
     data: {
       userId,
       productId,
-      price,
+      bidAmount,
       price_usd
     }
   });
