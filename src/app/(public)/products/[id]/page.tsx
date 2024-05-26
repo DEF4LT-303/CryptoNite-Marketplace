@@ -103,10 +103,10 @@ const ProductPage = ({
     setOffers(data);
   };
 
-  const time = (time:Date)=>{
+  const time = (time: Date) => {
     const now: Date = new Date();
     const offerDate: Date = new Date(time);
-    const diffInMs = now.getTime() - offerDate.getTime(); 
+    const diffInMs = now.getTime() - offerDate.getTime();
 
     const seconds = Math.floor(diffInMs / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -115,22 +115,20 @@ const ProductPage = ({
 
     let timeDifference;
     if (days > 0) {
-      timeDifference = `${days} day${days > 1 ? 's' : ''} ago`;
+      timeDifference = `${days} day${days > 1 ? "s" : ""} ago`;
     } else if (hours > 0) {
-      timeDifference = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+      timeDifference = `${hours} hour${hours > 1 ? "s" : ""} ago`;
     } else if (minutes > 0) {
-      timeDifference = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+      timeDifference = `${minutes} minute${minutes > 1 ? "s" : ""} ago`;
     } else {
-      if(seconds === 0){
-        timeDifference = 'just now'
-      }
-      else{
+      if (seconds === 0) {
+        timeDifference = "just now";
+      } else {
         timeDifference = `${seconds} seconds ago`;
       }
-      
     }
-    return timeDifference
-  }
+    return timeDifference;
+  };
 
   return (
     <MaxWidthWrapper>
@@ -215,9 +213,7 @@ const ProductPage = ({
                           {offer?.bidAmount} ETH
                         </TableCell>
                         <TableCell>$ {offer.price_usd}</TableCell>
-                        <TableCell>
-                          {time(offer.createdAt)}
-                        </TableCell>
+                        <TableCell>{time(offer.createdAt)}</TableCell>
                         <TableCell className="text-right">
                           {offer.user.name}
                         </TableCell>
