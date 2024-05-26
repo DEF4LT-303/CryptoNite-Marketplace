@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   if (!offers) {
     return NextResponse.json('Offers not found', { status: 404 });
   }
-  console.log(offers);
+
   return NextResponse.json(offers);
 }
 

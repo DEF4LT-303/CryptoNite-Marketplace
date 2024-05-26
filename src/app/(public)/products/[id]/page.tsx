@@ -40,6 +40,9 @@ const ProductPage = ({
   const [isError, setIsError] = useState(false);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [convertedPrices, setConvertedPrices] = useState<{
+    [key: string]: number;
+  }>({});
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -75,6 +78,29 @@ const ProductPage = ({
     fetchProduct();
     fetchOffers();
   }, [params.id]);
+
+  // USD Conversion
+  const fetchPrice = async (amount: number, offerId: string) => {
+    try {
+      const { data } = await axios.get(`/api/priceConversion?amount=${amount}`);
+      const roundedPrice = parseFloat(data.price.toFixed(2));
+
+      setConvertedPrices((prevPrices) => ({
+        ...prevPrices,
+        [offerId]: roundedPrice,
+      }));
+    } catch (error) {
+      console.error("Error fetching price:", error);
+    }
+  };
+
+  useEffect(() => {
+    offers.forEach((offer) => {
+      if (offer?.bidAmount) {
+        fetchPrice(offer.bidAmount, offer.id);
+      }
+    });
+  }, [offers]);
 
   if (isPending) {
     return <div>Loading...</div>;
@@ -212,7 +238,12 @@ const ProductPage = ({
                         <TableCell className="font-medium">
                           {offer?.bidAmount} ETH
                         </TableCell>
-                        <TableCell>$ {offer.price_usd}</TableCell>
+                        <TableCell>
+                          ${" "}
+                          {convertedPrices[offer.id] !== undefined
+                            ? convertedPrices[offer.id]
+                            : "Loading..."}
+                        </TableCell>
                         <TableCell>{time(offer.createdAt)}</TableCell>
                         <TableCell className="text-right">
                           {offer.user.name}
