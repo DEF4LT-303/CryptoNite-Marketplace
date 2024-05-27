@@ -34,14 +34,17 @@ export function OfferDialogue({
 
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [isPending, startTransition] = useTransition();
-  const [disabled, setDisabled] = useState(false);
+  const [disabled, setDisabled] = useState(true);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
     const floatValue = parseFloat(value);
 
-    if (!isNaN(floatValue) && floatValue <= offers[0].bidAmount) {
+    if (
+      (!isNaN(floatValue) && floatValue <= offers[0].bidAmount) ||
+      value === ""
+    ) {
       setDisabled(true);
     } else {
       setDisabled(false);
@@ -95,6 +98,7 @@ export function OfferDialogue({
               id="amount"
               type="number"
               className="col-span-3"
+              defaultValue={bidAmount}
               onChange={handleChange}
             />
           </div>
@@ -105,7 +109,11 @@ export function OfferDialogue({
               Your bid should be higher than the current bid.
             </DialogDescription>
           )}
-          <Button type="submit" onClick={handleSubmit} disabled={disabled}>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={isPending || disabled}
+          >
             Place Bid
           </Button>
         </DialogFooter>
