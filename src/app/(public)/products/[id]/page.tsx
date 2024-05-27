@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useCurrentUser } from "@/hooks/currentUser";
 import {
   Card,
   CardBody,
@@ -34,6 +35,8 @@ const ProductPage = ({
     id: string;
   };
 }) => {
+  const user = useCurrentUser();
+
   const [product, setProduct] = useState<Product | null>(null);
   const [offers, setOffers] = useState<OffersProps[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -198,7 +201,10 @@ const ProductPage = ({
               </CardBody>
               <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex w-full sm:w-1/2">
-                  <Button className="flex-grow bg-blue-500 hover:bg-blue-400">
+                  <Button
+                    className="flex-grow bg-blue-500 hover:bg-blue-400"
+                    disabled={!user}
+                  >
                     Buy Now
                   </Button>
                 </div>
@@ -206,6 +212,7 @@ const ProductPage = ({
                   variant="secondary"
                   className="w-full sm:w-1/2 flex items-center gap-2"
                   onClick={handleOpenDialog}
+                  disabled={!user}
                 >
                   <Tag size={16} />
                   Place order
