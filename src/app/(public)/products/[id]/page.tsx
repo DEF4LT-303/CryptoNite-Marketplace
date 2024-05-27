@@ -221,6 +221,7 @@ const ProductPage = ({
                   isOpen={isDialogOpen}
                   onClose={handleCloseDialog}
                   productId={product.id}
+                  offers={offers}
                   onSubmitSuccess={handleDialogSubmitSuccess}
                 />
               </CardFooter>

@@ -17,26 +17,35 @@ import { useState, useTransition } from "react";
 
 interface DialogDemoProps {
   isOpen: boolean;
-  onClose: () => void;
   productId: string;
+  offers: any;
+  onClose: () => void;
   onSubmitSuccess: () => void;
 }
 
 export function OfferDialogue({
   isOpen,
-  onClose,
   productId,
+  offers,
+  onClose,
   onSubmitSuccess,
 }: DialogDemoProps) {
   const user = useCurrentUser();
 
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [isPending, startTransition] = useTransition();
+  const [disabled, setDisabled] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 
     const floatValue = parseFloat(value);
+
+    if (!isNaN(floatValue) && floatValue <= offers[0].bidAmount) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
 
     if (!isNaN(floatValue)) {
       setBidAmount(floatValue);
@@ -85,14 +94,18 @@ export function OfferDialogue({
             <Input
               id="amount"
               type="number"
-              defaultValue={0}
               className="col-span-3"
               onChange={handleChange}
             />
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={handleSubmit} disabled={isPending}>
+          {disabled && (
+            <DialogDescription className="text-destructive">
+              Your bid should be higher than the current bid.
+            </DialogDescription>
+          )}
+          <Button type="submit" onClick={handleSubmit} disabled={disabled}>
             Place Bid
           </Button>
         </DialogFooter>
