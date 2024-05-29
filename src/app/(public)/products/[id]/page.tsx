@@ -36,7 +36,7 @@ const ProductPage = ({
   };
 }) => {
   const user = useCurrentUser();
-
+  const [lastBid,setLastBid] = useState<Number|String>("")
   const [product, setProduct] = useState<Product | null>(null);
   const [offers, setOffers] = useState<OffersProps[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -103,6 +103,16 @@ const ProductPage = ({
         fetchPrice(offer.bidAmount, offer.id);
       }
     });
+    if(user.id!=undefined){
+        const latestBidIndex = offers.findIndex(bid => bid.userId === user.id);
+        if (latestBidIndex !== -1) {
+          const timeDiff = timeForTimer(offers[latestBidIndex].createdAt);
+          setLastBid(timeDiff)
+        } else {
+          console.log("No bids found for user");
+        }
+  }
+    
   }, [offers]);
 
   if (isPending) {
@@ -155,6 +165,29 @@ const ProductPage = ({
       } else {
         timeDifference = `${seconds} seconds ago`;
       }
+    }
+    return timeDifference;
+  };
+
+  const timeForTimer = (time: Date) => {
+    const now: Date = new Date();
+    const offerDate: Date = new Date(time);
+    const diffInMs = now.getTime() - offerDate.getTime();
+
+    const seconds = Math.floor(diffInMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    let timeDifference;
+    if (days > 0) {
+      timeDifference = "ok"
+    } else if (hours > 0) {
+      timeDifference = "ok"
+    } else if (minutes > 0) {
+      timeDifference = "ok"
+    } else {
+      return timeDifference = seconds
     }
     return timeDifference;
   };
@@ -223,6 +256,7 @@ const ProductPage = ({
                   productId={product.id}
                   offers={offers}
                   onSubmitSuccess={handleDialogSubmitSuccess}
+                  lastBid = {lastBid}
                 />
               </CardFooter>
             </Card>

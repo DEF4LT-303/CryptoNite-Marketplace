@@ -17,10 +17,11 @@ import { useState, useTransition } from "react";
 
 interface DialogDemoProps {
   isOpen: boolean;
-  productId: string;
+  productId: String;
   offers: any;
   onClose: () => void;
   onSubmitSuccess: () => void;
+  lastBid:Number | String
 }
 
 export function OfferDialogue({
@@ -29,6 +30,7 @@ export function OfferDialogue({
   offers,
   onClose,
   onSubmitSuccess,
+  lastBid
 }: DialogDemoProps) {
   const user = useCurrentUser();
 
@@ -68,6 +70,8 @@ export function OfferDialogue({
 
     try {
       await axios.post("/api/offers", bid);
+      // console.log("done");
+      
       onSubmitSuccess();
     } catch (error) {
       console.error(error);
@@ -107,6 +111,7 @@ export function OfferDialogue({
           {disabled && (
             <DialogDescription className="text-destructive">
               Your bid should be higher than the current bid.
+              {lastBid}
             </DialogDescription>
           )}
           <Button
