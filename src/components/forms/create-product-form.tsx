@@ -15,6 +15,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ProductSchema } from "@/schemas";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
@@ -33,6 +40,7 @@ export function CreateProductForm() {
       description: undefined,
       price: undefined,
       images: [],
+      category: undefined,
       stock: 1,
     },
   });
@@ -40,7 +48,6 @@ export function CreateProductForm() {
   const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
     startTransition(async () => {
       const status = await imageUploaderRef.current.uploadImage();
-      console.log("status", status.uploadUrls);
 
       if (status && status.error) {
         toastFunction(status.error, "destructive");
@@ -48,6 +55,8 @@ export function CreateProductForm() {
       }
 
       data.images = status.uploadUrls; // Extend the data with image URLs
+
+      console.log("Data to be sent:", data);
 
       axios
         .post("/api/product", data)
@@ -131,6 +140,33 @@ export function CreateProductForm() {
 
         <FormField
           control={form.control}
+          name="category"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Category</FormLabel>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                disabled={isPending}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select product category" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="NFT">NFT</SelectItem>
+                  <SelectItem value="DigitalAsset">Digital Asset</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>Set a category.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="stock"
           render={({ field }) => (
             <FormItem>
@@ -138,7 +174,8 @@ export function CreateProductForm() {
               <FormControl>
                 <Input
                   placeholder="Set a stock"
-                  {...field}
+                  value={field.value}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
                   disabled={isPending}
                 />
               </FormControl>

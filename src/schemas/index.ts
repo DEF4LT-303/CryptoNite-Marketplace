@@ -110,6 +110,8 @@ export const ProductSchema = z.object({
     message: "Price must be at least $0.01",
   }),
 
+  category: z.enum(["NFT", "DigitalAsset"]),
+
   stock: z.number().min(1, {
     message: "Stock must be at least 1",
   }),

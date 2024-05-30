@@ -5,9 +5,9 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { name, description, price, images, stock } = body;
+  const { name, description, price, images, category, stock } = body;
 
-  const validatedFields = ProductSchema.safeParse({ name, description, price, images, stock });
+  const validatedFields = ProductSchema.safeParse({ name, description, price, images, category, stock });
 
   if (!validatedFields.success) {
     return NextResponse.json({ error: 'Invalid input' });
@@ -20,9 +20,12 @@ export async function POST(request: Request) {
         description,
         price,
         images,
+        category,
         stock,
       },
     });
+
+    console.log('Product created:', product);
 
     return NextResponse.json({ success: "Product created successfully!" });
   } catch (error) {
