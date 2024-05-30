@@ -4,7 +4,8 @@ import { Product } from "@prisma/client";
 const NFTCards = (product: Product) => {
   return (
     <Card
-      className="py-4 my-5 bg-primary-foreground rounded-sm border hover:-translate-y-1"
+      className="py-4 my-5 h-[330px] bg-primary-foreground border hover:-translate-y-1"
+      radius="sm"
       isPressable
       onPress={() => (window.location.href = `/products/${product.id}`)}
     >
