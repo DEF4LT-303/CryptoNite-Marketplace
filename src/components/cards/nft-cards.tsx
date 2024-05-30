@@ -21,7 +21,9 @@ const NFTCards = (product: Product) => {
       </CardBody>
       <CardFooter className="text-small justify-between">
         <b>{product.name}</b>
-        <p className="text-primary-500">ETH {product.price}</p>
+        <p className="text-primary-500">
+          {product.category === "NFT" ? "ETH" : "$"} {product.price}
+        </p>
       </CardFooter>
     </Card>
   );

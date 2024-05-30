@@ -18,9 +18,19 @@ const ProductPage = () => {
       setLoading(true);
 
       axios
-        .get("/api/product")
+        .get("/api/product?category=NFT")
         .then((res) => {
           setProducts(res.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error("Error fetching products:", err);
+        });
+
+      axios
+        .get("/api/product?category=DigitalAsset")
+        .then((res) => {
+          setAssets(res.data);
           setLoading(false);
         })
         .catch((err) => {

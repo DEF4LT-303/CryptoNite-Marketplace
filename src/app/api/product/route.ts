@@ -1,6 +1,7 @@
 import { getProductById } from "@/data/product";
 import { db } from "@/lib/db";
 import { ProductSchema } from "@/schemas";
+import { ProductCategory } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
@@ -37,6 +38,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
 
+  const category = searchParams.get('category') as ProductCategory | null;
+
   if (id) {
     const product = await getProductById(id);
 
@@ -46,6 +49,16 @@ export async function GET(request: Request) {
 
     return NextResponse.json(product);
   } else {
+    if (category) {
+      const products = await db.product.findMany({
+        where: {
+          category: category,
+        },
+      });
+
+      return NextResponse.json(products);
+    }
+
     const products = await db.product.findMany();
 
     return NextResponse.json(products);
