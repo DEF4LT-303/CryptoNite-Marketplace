@@ -38,6 +38,11 @@ enum OrderStatus {
   CANCELLED
 }
 
+enum ProductCategory {
+  NFT
+  DigitalAsset
+}
+
 model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
@@ -71,14 +76,15 @@ model PasswordResetToken {
 }
 
 model Product {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
   price       Float
   images      String[]
-  stock       Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  stock       Int?
+  category    ProductCategory
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
   orders      Order[]
   offers      Offers[]
 }
