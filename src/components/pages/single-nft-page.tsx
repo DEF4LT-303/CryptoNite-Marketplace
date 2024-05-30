@@ -1,6 +1,5 @@
 "use client";
 
-import AddToCartButton from "@/components/cart/add-to-cart";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { OfferDialogue } from "@/components/modals/offer-modal";
 import { Button } from "@/components/ui/button";
@@ -181,9 +180,6 @@ const NFTPage = ({ id }: { id: string }) => {
                       year: "numeric",
                     })}
                   </span>
-                </div>
-                <div>
-                  <AddToCartButton product={product} />
                 </div>
               </CardHeader>
               <CardBody>
