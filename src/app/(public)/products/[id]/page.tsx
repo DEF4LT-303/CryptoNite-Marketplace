@@ -36,7 +36,7 @@ const ProductPage = ({
   };
 }) => {
   const user = useCurrentUser();
-  const [lastBid,setLastBid] = useState<Number|String>("")
+  // const [lastBid,setLastBid] = useState<number|null>(null)
   const [product, setProduct] = useState<Product | null>(null);
   const [offers, setOffers] = useState<OffersProps[]>([]);
   const [isPending, startTransition] = useTransition();
@@ -80,7 +80,9 @@ const ProductPage = ({
 
     fetchProduct();
     fetchOffers();
-  }, [params.id]);
+
+
+  }, []);
 
   // USD Conversion
   const fetchPrice = async (amount: number, offerId: string) => {
@@ -103,15 +105,8 @@ const ProductPage = ({
         fetchPrice(offer.bidAmount, offer.id);
       }
     });
-    if(user.id!=undefined){
-        const latestBidIndex = offers.findIndex(bid => bid.userId === user.id);
-        if (latestBidIndex !== -1) {
-          const timeDiff = timeForTimer(offers[latestBidIndex].createdAt);
-          setLastBid(timeDiff)
-        } else {
-          console.log("No bids found for user");
-        }
-  }
+    
+    
     
   }, [offers]);
 
@@ -128,6 +123,22 @@ const ProductPage = ({
   }
 
   const handleOpenDialog = () => {
+    // axios
+    //   .get(`/api/offers?id=${params.id}`)
+    //   .then(({ data }) => {
+    //     const latestBidIndex = data.findIndex(bid => bid.userId === user.id);
+    //     if (latestBidIndex !== -1) {
+    //       const timeDiff = timeForTimer(data[latestBidIndex].createdAt);
+    //       if (timeDiff!='ok'){
+    //       setLastBid(timeDiff)
+    //       }
+    //     } else {
+    //       console.log("No bids found for user");
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
     setIsDialogOpen(true);
   };
 
@@ -169,28 +180,28 @@ const ProductPage = ({
     return timeDifference;
   };
 
-  const timeForTimer = (time: Date) => {
-    const now: Date = new Date();
-    const offerDate: Date = new Date(time);
-    const diffInMs = now.getTime() - offerDate.getTime();
+  // const timeForTimer = (time: Date) => {
+  //   const now: Date = new Date();
+  //   const offerDate: Date = new Date(time);
+  //   const diffInMs = now.getTime() - offerDate.getTime();
 
-    const seconds = Math.floor(diffInMs / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
+  //   const seconds = Math.floor(diffInMs / 1000);
+  //   const minutes = Math.floor(seconds / 60);
+  //   const hours = Math.floor(minutes / 60);
+  //   const days = Math.floor(hours / 24);
 
-    let timeDifference;
-    if (days > 0) {
-      timeDifference = "ok"
-    } else if (hours > 0) {
-      timeDifference = "ok"
-    } else if (minutes > 0) {
-      timeDifference = "ok"
-    } else {
-      return timeDifference = seconds
-    }
-    return timeDifference;
-  };
+  //   let timeDifference;
+  //   if (days > 0) {
+  //     timeDifference = "ok"
+  //   } else if (hours > 0) {
+  //     timeDifference = "ok"
+  //   } else if (minutes > 0) {
+  //     timeDifference = "ok"
+  //   } else {
+  //     return timeDifference = seconds
+  //   }
+  //   return timeDifference;
+  // };
 
   return (
     <MaxWidthWrapper>
@@ -256,7 +267,7 @@ const ProductPage = ({
                   productId={product.id}
                   offers={offers}
                   onSubmitSuccess={handleDialogSubmitSuccess}
-                  lastBid = {lastBid}
+                  // lastBid = {lastBid}
                 />
               </CardFooter>
             </Card>

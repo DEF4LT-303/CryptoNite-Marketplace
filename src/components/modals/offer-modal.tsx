@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCurrentUser } from "@/hooks/currentUser";
 import axios from "axios";
-import { useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 interface DialogDemoProps {
   isOpen: boolean;
@@ -21,7 +21,7 @@ interface DialogDemoProps {
   offers: any;
   onClose: () => void;
   onSubmitSuccess: () => void;
-  lastBid:Number | String
+  // lastBid:number | null
 }
 
 export function OfferDialogue({
@@ -30,13 +30,82 @@ export function OfferDialogue({
   offers,
   onClose,
   onSubmitSuccess,
-  lastBid
+  // lastBid
 }: DialogDemoProps) {
   const user = useCurrentUser();
 
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [isPending, startTransition] = useTransition();
   const [disabled, setDisabled] = useState(true);
+
+
+
+  const [seconds, setSeconds] = useState(() => {
+    const timeStamp = localStorage.getItem('timeStamp');
+    const now: Date = new Date();
+    const offerDate: Date = new Date(timeStamp);
+    const diffInMs = now.getTime() - offerDate.getTime();
+
+    const seconds = Math.floor(diffInMs / 1000);
+    if (seconds<=60){
+      return 60 - seconds
+    }
+    return 60; // Default or stored value
+  });
+  const [isRunning, setIsRunning] = useState(() => {
+    const storedIsRunning = localStorage.getItem('watchIsRunning');
+    return storedIsRunning === 'true'; // Parse boolean value from string
+  });
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (isRunning) {
+      intervalRef.current = setInterval(() => {
+        if (seconds > 0) {
+          setSeconds(seconds - 1);
+        } else {
+          // clearInterval(intervalRef.current); // Stop timer when it reaches 0
+          // setIsRunning(false); // Set isRunning to false after reaching 0
+          setSeconds(60);
+          setIsRunning(false);
+          clearInterval(intervalRef.current); // Ensure interval is cleared
+        }
+      }, 1000);
+    }
+
+    return () => clearInterval(intervalRef.current);
+  }, [isRunning, seconds]);
+
+  useEffect(() => {
+    // localStorage.setItem('watchSeconds', seconds);
+    localStorage.setItem('watchIsRunning', isRunning); // Store isRunning state
+  }, [seconds, isRunning]);
+
+  const timeForTimer = (time: Date) => {
+    const now: Date = new Date();
+    const offerDate: Date = new Date(time);
+    const diffInMs = now.getTime() - offerDate.getTime();
+
+    const seconds = Math.floor(diffInMs / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    let timeDifference;
+    if (days > 0) {
+      timeDifference = "ok"
+    } else if (hours > 0) {
+      timeDifference = "ok"
+    } else if (minutes > 0) {
+      timeDifference = "ok"
+    } else {
+      return timeDifference = seconds
+    }
+    return timeDifference;
+  };
+
+  const formattedTime = `${Math.floor(seconds / 60)}:${seconds % 60}`; // Format time
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -69,9 +138,14 @@ export function OfferDialogue({
     };
 
     try {
-      await axios.post("/api/offers", bid);
-      // console.log("done");
+      console.log("started");
       
+      const {data} = await axios.post("/api/offers", bid);
+      localStorage.setItem('timeStamp', data.message);
+      // const timeDiff = timeForTimer(data.message)
+      // console.log(timeDiff);
+      
+      setIsRunning(true);
       onSubmitSuccess();
     } catch (error) {
       console.error(error);
@@ -111,9 +185,11 @@ export function OfferDialogue({
           {disabled && (
             <DialogDescription className="text-destructive">
               Your bid should be higher than the current bid.
-              {lastBid}
             </DialogDescription>
           )}
+          <DialogDescription>
+              {formattedTime}
+          </DialogDescription>
           <Button
             type="submit"
             onClick={handleSubmit}
