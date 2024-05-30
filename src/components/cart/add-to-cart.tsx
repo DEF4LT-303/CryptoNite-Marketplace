@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 
 const AddToCartButton = ({ product }: { product: Product }) => {
   const { items, addItem } = useCart();
+  const isSuccess = false;
 
   const isProductInCart = (productId: string) => {
     return items.some((item) => item.product.id === productId);
@@ -14,15 +15,23 @@ const AddToCartButton = ({ product }: { product: Product }) => {
 
   return (
     <Button
-      className="w-full hover:text-muted-foreground"
-      variant="ghost"
+      className=" w-1/2 bg-emerald-600 hover:bg-emerald-500"
+      variant="secondary"
       disabled={isProductInCart(product.id)}
       onClick={() => {
         addItem(product);
       }}
     >
-      {/* {isSuccess ? "Added to cart" : "Add to cart"} */}
-      <ShoppingCart />
+      <div className="flex justify-center items-center gap-2">
+        <ShoppingCart />
+        <p>
+          {isProductInCart(product.id)
+            ? "Added to cart"
+            : isSuccess
+            ? "Add to cart"
+            : "Add to cart"}
+        </p>
+      </div>
     </Button>
   );
 };
