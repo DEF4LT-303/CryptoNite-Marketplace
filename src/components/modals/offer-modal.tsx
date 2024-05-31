@@ -65,8 +65,6 @@ export function OfferDialogue({
         if (seconds > 0) {
           setSeconds(seconds - 1);
         } else {
-          // clearInterval(intervalRef.current); // Stop timer when it reaches 0
-          // setIsRunning(false); // Set isRunning to false after reaching 0
           setSeconds(60);
           setIsRunning(false);
           clearInterval(intervalRef.current); // Ensure interval is cleared
@@ -81,28 +79,7 @@ export function OfferDialogue({
     localStorage.setItem('watchIsRunning', isRunning); // Store isRunning state
   }, [seconds, isRunning]);
 
-  const timeForTimer = (time: Date) => {
-    const now: Date = new Date();
-    const offerDate: Date = new Date(time);
-    const diffInMs = now.getTime() - offerDate.getTime();
-
-    const seconds = Math.floor(diffInMs / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-
-    let timeDifference;
-    if (days > 0) {
-      timeDifference = "ok"
-    } else if (hours > 0) {
-      timeDifference = "ok"
-    } else if (minutes > 0) {
-      timeDifference = "ok"
-    } else {
-      return timeDifference = seconds
-    }
-    return timeDifference;
-  };
+  
 
   const formattedTime = `${Math.floor(seconds / 60)}:${seconds % 60}`; // Format time
   
