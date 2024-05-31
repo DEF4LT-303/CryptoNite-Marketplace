@@ -21,7 +21,6 @@ interface DialogDemoProps {
   offers: any;
   onClose: () => void;
   onSubmitSuccess: () => void;
-  // lastBid:number | null
 }
 
 export function OfferDialogue({
@@ -30,7 +29,6 @@ export function OfferDialogue({
   offers,
   onClose,
   onSubmitSuccess,
-  // lastBid
 }: DialogDemoProps) {
   const user = useCurrentUser();
 
@@ -39,6 +37,12 @@ export function OfferDialogue({
   const [disabled, setDisabled] = useState(true);
 
 
+
+  const [isRunning, setIsRunning] = useState(() => {
+    const storedIsRunning = localStorage.getItem('watchIsRunning');
+    return storedIsRunning === 'true'; // Parse boolean value from string
+  });
+  const intervalRef = useRef(null);
 
   const [seconds, setSeconds] = useState(() => {
     const timeStamp = localStorage.getItem('timeStamp');
@@ -50,13 +54,10 @@ export function OfferDialogue({
     if (seconds<=60){
       return 60 - seconds
     }
+    setIsRunning(false)
     return 60; // Default or stored value
   });
-  const [isRunning, setIsRunning] = useState(() => {
-    const storedIsRunning = localStorage.getItem('watchIsRunning');
-    return storedIsRunning === 'true'; // Parse boolean value from string
-  });
-  const intervalRef = useRef(null);
+  
 
   useEffect(() => {
     if (isRunning) {
@@ -77,7 +78,6 @@ export function OfferDialogue({
   }, [isRunning, seconds]);
 
   useEffect(() => {
-    // localStorage.setItem('watchSeconds', seconds);
     localStorage.setItem('watchIsRunning', isRunning); // Store isRunning state
   }, [seconds, isRunning]);
 
@@ -142,8 +142,6 @@ export function OfferDialogue({
       
       const {data} = await axios.post("/api/offers", bid);
       localStorage.setItem('timeStamp', data.message);
-      // const timeDiff = timeForTimer(data.message)
-      // console.log(timeDiff);
       
       setIsRunning(true);
       onSubmitSuccess();
