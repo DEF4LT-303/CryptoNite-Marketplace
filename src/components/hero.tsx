@@ -1,18 +1,9 @@
-"use client";
-
 import Link from "next/link";
 
-import { useState } from "react";
 import MaxWidthWrapper from "./max-width-wrapper";
 import { Button, buttonVariants } from "./ui/button";
 
-interface HeroSectionProps {
-  user: boolean;
-}
-
-const HeroSection = ({ user }: HeroSectionProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+const HeroSection = () => {
   return (
     <MaxWidthWrapper>
       <div className="bg-background duration-1000 animate-in animate fade-in-5 slide-in-from-right-2.5">

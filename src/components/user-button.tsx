@@ -30,11 +30,8 @@ const UserButton = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        asChild
-        className="cursor-pointer text-gray-400 hover:text-gray-500"
-      >
-        <User />
+      <DropdownMenuTrigger asChild className="cursor-pointer">
+        <User className="text-muted-foreground hover:text-secondary-foreground ease-in-out duration-300" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
