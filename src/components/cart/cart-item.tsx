@@ -3,10 +3,16 @@ import { formatPrice } from "@/lib/utils";
 import { Product } from "@prisma/client";
 import { ImageIcon, X } from "lucide-react";
 
-const CartItem = ({ product }: { product: Product }) => {
+type CartItemProps = {
+  product: Product;
+  quantity: number;
+};
+
+const CartItem = ({ product, quantity }: CartItemProps) => {
   const image = product.images[0];
 
   const { removeItem } = useCart();
+  console.log(product);
 
   return (
     <div className="space-y-3 py-2">
@@ -35,10 +41,10 @@ const CartItem = ({ product }: { product: Product }) => {
             </span>
 
             <span className="line-clamp-1 text-xs capitalize text-muted-foreground">
-              Category: NFT
+              x {quantity}
             </span>
             <span className="line-clamp-1 text-xs mt-1 text-muted-foreground">
-              {formatPrice(product.price)}
+              {formatPrice(product.price * quantity)}
             </span>
           </div>
         </div>
