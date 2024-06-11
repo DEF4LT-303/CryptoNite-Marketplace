@@ -34,9 +34,15 @@ const Navbar = ({ user }: any) => {
               </div>
 
               <div className="ml-auto flex items-center gap-5">
-                <div>
-                  <ToggleTheme />
-                </div>
+                <>
+                  <div className="hidden sm:block">
+                    <ToggleTheme />
+                  </div>
+                  <span
+                    className="h-6 w-px bg-gray-500 hidden sm:block"
+                    aria-hidden="true"
+                  />
+                </>
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {user ? null : (
                     <Link
