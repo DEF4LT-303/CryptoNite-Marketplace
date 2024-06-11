@@ -26,7 +26,9 @@ const Cart = () => {
     (total, { product }) => total + product.price,
     0
   );
-  const fee = 1;
+  const fee = 0;
+
+  console.log(items);
 
   return (
     <Sheet>
@@ -55,8 +57,12 @@ const Cart = () => {
           <>
             <div className="flex w-full flex-col pr-6">
               <ScrollArea>
-                {items.map(({ product }) => (
-                  <CartItem key={product.id} product={product} />
+                {items.map(({ product, quantity }) => (
+                  <CartItem
+                    key={product.id}
+                    product={product}
+                    quantity={quantity}
+                  />
                 ))}
               </ScrollArea>
             </div>
