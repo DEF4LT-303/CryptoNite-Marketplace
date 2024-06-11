@@ -28,8 +28,6 @@ const Cart = () => {
   );
   const fee = 0;
 
-  console.log(items);
-
   return (
     <Sheet>
       <SheetTrigger
@@ -43,10 +41,10 @@ const Cart = () => {
             shape="circle"
             className="absolute top-1 -right-0 flex items-center justify-center w-5 h-5 bg-red-500 text-primary-background text-sm rounded-full shadow-md"
           >
-            <ShoppingCart className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
+            <ShoppingCart className="h-6 w-6 flex-shrink-0 text-muted-foreground hover:text-secondary-foreground ease-in-out duration-300" />
           </Badge>
         ) : (
-          <ShoppingCart className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
+          <ShoppingCart className="h-6 w-6 flex-shrink-0 text-muted-foreground hover:text-secondary-foreground ease-in-out duration-300" />
         )}
       </SheetTrigger>
       <SheetContent className="flex w-full flex-col pr-0 sm:max-w-lg">

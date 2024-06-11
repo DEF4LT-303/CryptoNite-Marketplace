@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import HeroSection from "@/components/hero";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
@@ -25,12 +24,12 @@ const perks = [
 ];
 
 export default async function Home() {
-  const session = await auth();
-  const user = session ? true : false;
+  // const session = await auth();
+  // const user = session ? true : false;
 
   return (
     <>
-      <HeroSection user={user} />
+      <HeroSection />
 
       <section className="border-t border-gray-500 bg-primary-foreground">
         <MaxWidthWrapper className="py-20">

@@ -5,8 +5,8 @@ import Link from "next/link";
 import NavItems from "@/components/navigation/navItems";
 import UserButton from "@/components/user-button";
 import Cart from "../cart/cart";
-import { Icons } from "../icons";
 import MaxWidthWrapper from "../max-width-wrapper";
+import { ToggleTheme } from "../settings/ToggleTheme";
 import { buttonVariants } from "../ui/button";
 import MobileNav from "./mobile-nav";
 
@@ -20,7 +20,12 @@ const Navbar = ({ user }: any) => {
               <MobileNav />
               <div className="ml-4 flex lg:ml-0">
                 <Link href="/">
-                  <Icons.logo className="h-10 w-10" />
+                  <h2 className="text-blue-500 text-2xl font-semibold">
+                    Crypto
+                    <span className="text-emerald-500 dark:text-emerald-300">
+                      Nite
+                    </span>
+                  </h2>
                 </Link>
               </div>
 
@@ -28,7 +33,16 @@ const Navbar = ({ user }: any) => {
                 <NavItems />
               </div>
 
-              <div className="ml-auto flex items-center">
+              <div className="ml-auto flex items-center gap-5">
+                <>
+                  <div className="hidden sm:block">
+                    <ToggleTheme />
+                  </div>
+                  <span
+                    className="h-6 w-px bg-gray-500 hidden sm:block"
+                    aria-hidden="true"
+                  />
+                </>
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   {user ? null : (
                     <Link
@@ -38,11 +52,9 @@ const Navbar = ({ user }: any) => {
                       Sign in
                     </Link>
                   )}
-
                   {user ? null : (
                     <span className="h-6 w-px bg-gray-500" aria-hidden="true" />
                   )}
-
                   {user ? (
                     <div>
                       <Link href="/profile" legacyBehavior passHref>
@@ -57,11 +69,9 @@ const Navbar = ({ user }: any) => {
                       Create Account
                     </Link>
                   )}
-
                   {user ? (
                     <span className="h-6 w-px bg-gray-500" aria-hidden="true" />
                   ) : null}
-
                   {user ? null : (
                     <div className="flex lg:ml-6">
                       <span
@@ -70,7 +80,6 @@ const Navbar = ({ user }: any) => {
                       />
                     </div>
                   )}
-
                   <div className="ml-4 flow-root lg:ml-6">
                     <Cart />
                   </div>
@@ -79,9 +88,9 @@ const Navbar = ({ user }: any) => {
                   <div className="flex gap-5 mr-2">
                     {user && (
                       <>
-                        <Link href="/profile" legacyBehavior passHref>
+                        <div>
                           <UserButton />
-                        </Link>
+                        </div>
                         <span
                           className="h-6 w-px bg-gray-500"
                           aria-hidden="true"
