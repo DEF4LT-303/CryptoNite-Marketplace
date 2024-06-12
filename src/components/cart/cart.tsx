@@ -23,7 +23,7 @@ const Cart = () => {
   const { items } = useCart();
   const itemCount = items.length;
   const cartTotal = items.reduce(
-    (total, { product }) => total + product.price,
+    (total, { product, quantity }) => total + product.price * quantity,
     0
   );
   const fee = 0;
@@ -39,7 +39,7 @@ const Cart = () => {
             color="primary"
             content={itemCount}
             shape="circle"
-            className="absolute top-1 -right-0 flex items-center justify-center w-5 h-5 bg-red-500 text-primary-background text-sm rounded-full shadow-md"
+            className="absolute top-1 -right-0 flex items-center justify-center w-5 h-5 bg-red-400 dark:bg-red-500 text-primary-background text-sm rounded-full shadow-md"
           >
             <ShoppingCart className="h-6 w-6 flex-shrink-0 text-muted-foreground hover:text-secondary-foreground ease-in-out duration-300" />
           </Badge>
@@ -85,7 +85,7 @@ const Cart = () => {
               <SheetFooter>
                 <SheetTrigger asChild>
                   <Link
-                    href="/cart"
+                    href="/checkout"
                     className={buttonVariants({
                       className: "w-full",
                     })}
