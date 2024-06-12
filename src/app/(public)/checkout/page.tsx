@@ -76,70 +76,71 @@ const CheckoutPage = () => {
                     const image = product.images[0];
 
                     return (
-                      <li key={product.id} className="flex py-6 sm:py-10">
-                        <div className="flex-shrink-0">
-                          <div className="relative h-24 w-24">
-                            {image ? (
-                              <Image
-                                fill
-                                src={image}
-                                alt="product image"
-                                className="h-full w-full rounded-md object-cover object-center sm:h-48 sm:w-48"
-                              />
-                            ) : null}
+                      <div className="flex flex-col">
+                        <li key={product.id} className="flex py-6 sm:py-10s">
+                          <div className="flex-shrink-0">
+                            <div className="relative h-32 w-32">
+                              {image ? (
+                                <Image
+                                  fill
+                                  src={image}
+                                  alt="product image"
+                                  className="h-full w-full rounded-md object-cover object-center sm:h-48 sm:w-48"
+                                />
+                              ) : null}
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                          <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-                            <div>
-                              <div className="flex justify-between">
-                                <h3 className="text-sm">
-                                  <Link
-                                    href={`/products/${product.id}`}
-                                    className="font-medium text-primary hover:text-muted-foreground"
+                          <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                            <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                              <div>
+                                <div className="flex justify-between">
+                                  <h3 className="text-sm">
+                                    <Link
+                                      href={`/products/${product.id}`}
+                                      className="font-medium text-primary hover:text-muted-foreground"
+                                    >
+                                      {product.name}
+                                    </Link>
+                                  </h3>
+                                </div>
+
+                                <div className="mt-1 flex text-sm">
+                                  <p className="text-muted-foreground">
+                                    Category: {product.category}
+                                  </p>
+                                </div>
+                                <div className="mt-1 flex text-sm">
+                                  <p className="text-muted-foreground">
+                                    Quantity: {quantity}
+                                  </p>
+                                </div>
+
+                                <p className="mt-1 text-sm font-medium text-primary">
+                                  {formatPrice(product.price * quantity)}
+                                </p>
+
+                                <p className="flex my-2 space-x-1 text-sm text-muted-foreground">
+                                  <span>Eligible for instant delivery</span>
+                                  <Check className="h-5 w-5 flex-shrink-0 text-green-500" />
+                                </p>
+                              </div>
+
+                              <div className="mt-4 sm:mt-0 sm:pr-9 w-20">
+                                <div className="absolute right-0 top-0">
+                                  <Button
+                                    aria-label="remove product"
+                                    onClick={() => removeItem(product.id)}
+                                    variant="ghost"
                                   >
-                                    {product.name}
-                                  </Link>
-                                </h3>
-                              </div>
-
-                              <div className="mt-1 flex text-sm">
-                                <p className="text-muted-foreground">
-                                  Category: {product.category}
-                                </p>
-                              </div>
-                              <div className="mt-1 flex text-sm">
-                                <p className="text-muted-foreground">
-                                  Quantity: {quantity}
-                                </p>
-                              </div>
-
-                              <p className="mt-1 text-sm font-medium text-primary">
-                                {formatPrice(product.price * quantity)}
-                              </p>
-                            </div>
-
-                            <div className="mt-4 sm:mt-0 sm:pr-9 w-20">
-                              <div className="absolute right-0 top-0">
-                                <Button
-                                  aria-label="remove product"
-                                  onClick={() => removeItem(product.id)}
-                                  variant="ghost"
-                                >
-                                  <X className="h-5 w-5" aria-hidden="true" />
-                                </Button>
+                                    <X className="h-5 w-5" aria-hidden="true" />
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           </div>
-
-                          <p className="mt-4 flex space-x-2 text-sm">
-                            <Check className="h-5 w-5 flex-shrink-0 text-green-500" />
-
-                            <span>Eligible for instant delivery</span>
-                          </p>
-                        </div>
-                      </li>
+                        </li>
+                      </div>
                     );
                   })}
               </ul>
