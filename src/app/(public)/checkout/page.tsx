@@ -1,8 +1,9 @@
 "use client";
 
+import { BuyProduct } from "@/actions/purchase";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/hooks/use-cart";
+import { CartItem, useCart } from "@/hooks/use-cart";
 import { cn, formatPrice } from "@/lib/utils";
 
 import { Check, Loader2, X } from "lucide-react";
@@ -27,6 +28,21 @@ const CheckoutPage = () => {
   );
 
   const fee = 0;
+
+  const onCheckout = async (cartItems: CartItem[]) => {
+    try {
+      const quantity = cartItems.reduce(
+        (total, { quantity }) => total + quantity,
+        0
+      );
+      const productIds = cartItems.map((item) => item.product.id);
+
+      await BuyProduct(productIds, quantity);
+      console.log("Purchase successful");
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
 
   return (
     <MaxWidthWrapper>
@@ -193,7 +209,9 @@ const CheckoutPage = () => {
               <div className="mt-6">
                 <Button
                   disabled={items.length === 0 || isLoading}
-                  onClick={() => {}}
+                  onClick={() => {
+                    onCheckout(items);
+                  }}
                   className="w-full"
                   size="lg"
                 >
