@@ -31,13 +31,10 @@ const CheckoutPage = () => {
 
   const onCheckout = async (cartItems: CartItem[]) => {
     try {
-      const quantity = cartItems.reduce(
-        (total, { quantity }) => total + quantity,
-        0
-      );
       const productIds = cartItems.map((item) => item.product.id);
+      const quantities = cartItems.map((item) => item.quantity);
 
-      await BuyProduct(productIds, quantity);
+      await BuyProduct(productIds, quantities);
       console.log("Purchase successful");
     } catch (error) {
       console.error("Error during checkout:", error);
