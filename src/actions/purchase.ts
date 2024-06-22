@@ -1,13 +1,13 @@
 "use server";
 
-import { getProductById } from "@/data/product";
 import { stripe } from "@/lib/stripe";
+import { Product } from "@prisma/client";
 import { redirect } from "next/navigation";
 
-export const BuyProduct = async (productIds: string[], quantities: number[]) => {
+export const BuyProduct = async (products: Product[], quantities: number[]) => {
   const lineItems = await Promise.all(
-    productIds.map(async (productId, index) => {
-      const product = await getProductById(productId);
+    products.map(async (product, index) => {
+      const productId = product.id;
 
       if (!product) {
         throw new Error(`Product with ID ${productId} not found`);

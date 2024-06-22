@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const CheckoutPage = () => {
-  const { items, removeItem } = useCart();
+  const { items, removeItem, clearItems } = useCart();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const productsIds = items.map(({ product }) => product.id);
@@ -31,11 +31,11 @@ const CheckoutPage = () => {
 
   const onCheckout = async (cartItems: CartItem[]) => {
     try {
-      const productIds = cartItems.map((item) => item.product.id);
+      const products = cartItems.map((item) => item.product);
       const quantities = cartItems.map((item) => item.quantity);
 
-      await BuyProduct(productIds, quantities);
-      console.log("Purchase successful");
+      await BuyProduct(products, quantities);
+      clearItems();
     } catch (error) {
       console.error("Error during checkout:", error);
     }
