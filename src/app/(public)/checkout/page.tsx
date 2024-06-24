@@ -3,8 +3,11 @@
 import { BuyProduct } from "@/actions/purchase";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { Button } from "@/components/ui/button";
+import { useCurrentUser } from "@/hooks/currentUser";
 import { CartItem, useCart } from "@/hooks/use-cart";
 import { cn, formatPrice } from "@/lib/utils";
+import { Product } from "@prisma/client";
+import axios from "axios";
 
 import { Check, Loader2, X } from "lucide-react";
 import Image from "next/image";
@@ -12,6 +15,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const CheckoutPage = () => {
+  const user = useCurrentUser();
   const { items, removeItem, clearItems } = useCart();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -29,13 +33,42 @@ const CheckoutPage = () => {
 
   const fee = 0;
 
+  const placeOrder = async (
+    products: Product[],
+    quantities: number[],
+    status: string
+  ) => {
+    setIsLoading(true);
+
+    for (let i = 0; i < products.length; i++) {
+      const product = products[i];
+      const quantity = quantities[i];
+
+      axios
+        .post("/api/order", {
+          userId: user && user.id,
+          productId: product.id,
+          total: product.price * quantity,
+          status,
+        })
+        .then(async () => {
+          console.log("Order placed successfully");
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error placing order:", error);
+          setIsLoading(false);
+        });
+    }
+  };
+
   const onCheckout = async (cartItems: CartItem[]) => {
     try {
       const products = cartItems.map((item) => item.product);
       const quantities = cartItems.map((item) => item.quantity);
 
       await BuyProduct(products, quantities);
-      clearItems();
+      // await placeOrder(products, quantities, "COMPLETED");
     } catch (error) {
       console.error("Error during checkout:", error);
     }
