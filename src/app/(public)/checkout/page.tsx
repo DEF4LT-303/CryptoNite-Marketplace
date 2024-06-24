@@ -48,6 +48,7 @@ const CheckoutPage = () => {
         .post("/api/order", {
           userId: user && user.id,
           productId: product.id,
+          quantity,
           total: product.price * quantity,
           status,
         })

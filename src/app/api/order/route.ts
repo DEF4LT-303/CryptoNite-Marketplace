@@ -19,12 +19,13 @@ export async function GET(req: Request) {
 export async function POST(req: Request) {
   const body = await req.json();
   console.log(body);
-  const { userId, productId, total, status } = body;
+  const { userId, productId, quantity, total, status } = body;
 
   const order = await db.order.create({
     data: {
       userId,
       productId,
+      quantity,
       total,
       status,
     },
