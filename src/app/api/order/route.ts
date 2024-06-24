@@ -1,4 +1,5 @@
 import { getOrderByUserId } from "@/data/order";
+import { db } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 export async function GET(req: Request) {
@@ -13,4 +14,22 @@ export async function GET(req: Request) {
   const orders = await getOrderByUserId(userId);
 
   return NextResponse.json(orders);
+}
+
+export async function POST(req: Request) {
+  const body = await req.json();
+  console.log(body);
+  const { userId, productId, quantity, total, status } = body;
+
+  const order = await db.order.create({
+    data: {
+      userId,
+      productId,
+      quantity,
+      total,
+      status,
+    },
+  });
+
+  return NextResponse.json({ success: `Order created with id: ${order.id}` });
 }
