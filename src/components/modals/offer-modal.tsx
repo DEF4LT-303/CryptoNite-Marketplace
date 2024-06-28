@@ -15,6 +15,7 @@ import { useCurrentUser } from "@/hooks/currentUser";
 import axios from "axios";
 import { useEffect, useRef, useState, useTransition } from "react";
 
+// tried to update this page adasdasdasdasdasdasdasdas
 interface DialogDemoProps {
   isOpen: boolean;
   productId: String;
@@ -38,14 +39,14 @@ export function OfferDialogue({
 
 
 
-  const [isRunning, setIsRunning] = useState(() => {
+  const [isRunning, setIsRunning] = useState<any>(() => {
     const storedIsRunning = localStorage.getItem('watchIsRunning');
     return storedIsRunning === 'true'; // Parse boolean value from string
   });
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<any>(null);
 
   const [seconds, setSeconds] = useState(() => {
-    const timeStamp = localStorage.getItem('timeStamp');
+    const timeStamp : any = localStorage.getItem('timeStamp');
     const now: Date = new Date();
     const offerDate: Date = new Date(timeStamp);
     const diffInMs = now.getTime() - offerDate.getTime();
@@ -77,7 +78,7 @@ export function OfferDialogue({
 
   useEffect(() => {
     localStorage.setItem('watchIsRunning', isRunning); // Store isRunning state
-  }, [seconds, isRunning]);
+  }, [isRunning]);
 
   
 
