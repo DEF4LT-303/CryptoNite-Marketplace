@@ -32,7 +32,7 @@ export default async function RootLayout({
             inter.className
           )}
         >
-          <ThemeProvider attribute="class" disableTransitionOnChange>
+          <ThemeProvider attribute="class">
             <NextUIProvider>
               <main className="bg-background">
                 <div className="">{children}</div>
