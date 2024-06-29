@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useCurrentUser } from "@/hooks/currentUser";
 import { useBiddingTimer } from "@/hooks/use-bidding-timer";
 import axios from "axios";
+import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 // tried to update this page adasdasdasdasdasdasdasdas
@@ -35,10 +36,11 @@ export function OfferDialogue({
   const user = useCurrentUser();
   const [bidAmount, setBidAmount] = useState(0);
   const [disabled, setDisabled] = useState(true);
-  const intervalRef = useRef(null);
+  const [isRunning, setIsRunning] = useState(false);
+  const intervalRef = useRef<number | null>(null);
 
   const { timeStamps, setTimer, clearProductTimer } = useBiddingTimer();
-  const defaultSeconds = 60;
+  const defaultSeconds = 10;
   const [seconds, setSeconds] = useState(defaultSeconds);
 
   useEffect(() => {
@@ -53,14 +55,19 @@ export function OfferDialogue({
           return remainingSeconds;
         }
         clearProductTimer(productId);
+        setIsRunning(false); // Stop running when timer is cleared
         return defaultSeconds;
       });
 
-      intervalRef.current = setInterval(() => {
+      setIsRunning(true); // Timer is running
+      intervalRef.current = window.setInterval(() => {
         setSeconds((prev) => {
           if (prev <= 1) {
-            clearInterval(intervalRef.current);
+            if (intervalRef.current !== null) {
+              clearInterval(intervalRef.current);
+            }
             clearProductTimer(productId);
+            setIsRunning(false); // Stop running when timer reaches zero
             return defaultSeconds;
           }
           return prev - 1;
@@ -68,10 +75,14 @@ export function OfferDialogue({
       }, 1000);
     }
 
-    return () => clearInterval(intervalRef.current);
+    return () => {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, [timeStamps, productId, clearProductTimer]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { value } = e.target;
     const floatValue = parseFloat(value);
 
@@ -87,6 +98,8 @@ export function OfferDialogue({
     try {
       const { data } = await axios.post("/api/offers", bid);
       setTimer(productId, Date.now());
+      setBidAmount(0);
+      setDisabled(true);
       onSubmitSuccess();
     } catch (error) {
       console.error(error);
@@ -120,16 +133,31 @@ export function OfferDialogue({
           </div>
         </div>
         <DialogFooter>
-          {disabled && (
+          {isRunning ? (
+            <DialogDescription className="text-destructive">
+              Please wait before placing another bid.
+            </DialogDescription>
+          ) : disabled ? (
             <DialogDescription className="text-destructive">
               Your bid should be higher than the current bid.
             </DialogDescription>
+          ) : null}
+          {isRunning && (
+            <DialogDescription>
+              {Math.floor(seconds / 60)}:{seconds % 60}
+            </DialogDescription>
           )}
-          <DialogDescription>
-            {Math.floor(seconds / 60)}:{seconds % 60}
-          </DialogDescription>
-          <Button type="submit" onClick={handleSubmit} disabled={disabled}>
-            Place Bid
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={disabled || isRunning}
+            className="min-w-[120px]"
+          >
+            {isRunning ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              "Submit"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
