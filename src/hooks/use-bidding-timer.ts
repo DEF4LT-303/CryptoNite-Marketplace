@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 type ProductTimer = {
   timestamp: number;
@@ -40,7 +40,7 @@ export const useBiddingTimer = create<TimerState>()(
         })),
     }),
     {
-      name: "timer",
+      name: 'timer',
       storage: createJSONStorage(() => localStorage),
     }
   )

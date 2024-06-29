@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { useCurrentUser } from "@/hooks/currentUser";
 import { useBiddingTimer } from "@/hooks/use-bidding-timer";
 import axios from "axios";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // tried to update this page adasdasdasdasdasdasdasdas
 interface DialogDemoProps {
@@ -33,101 +33,60 @@ export function OfferDialogue({
   onSubmitSuccess,
 }: DialogDemoProps) {
   const user = useCurrentUser();
-
-  const [bidAmount, setBidAmount] = useState<number>(0);
-  const [isPending, startTransition] = useTransition();
+  const [bidAmount, setBidAmount] = useState(0);
   const [disabled, setDisabled] = useState(true);
-  const { timeStamps, setTimer, clearAllTimers, clearProductTimer } =
-    useBiddingTimer();
+  const intervalRef = useRef(null);
 
-  // console.log(timeStamps[productId]);
-
-  const [isRunning, setIsRunning] = useState<any>(() => {
-    // const storedIsRunning = localStorage.getItem("watchIsRunning");
-    const storedIsRunning = timeStamps[productId]?.isRunning;
-
-    return storedIsRunning === true; // Parse boolean value from string
-  });
-  const intervalRef = useRef<any>(null);
-
-  const [seconds, setSeconds] = useState(() => {
-    // const timeStamp: any = localStorage.getItem("timeStamp");
-    const timeStamp: any = timeStamps[productId]?.timestamp;
-    const now: Date = new Date();
-    const offerDate: Date = new Date(timeStamp);
-    const diffInMs = now.getTime() - offerDate.getTime();
-
-    const seconds = Math.floor(diffInMs / 1000);
-    if (seconds <= 60) {
-      return 60 - seconds;
-    }
-    setIsRunning(false);
-    return 60; // Default or stored value
-  });
+  const { timeStamps, setTimer, clearProductTimer } = useBiddingTimer();
+  const defaultSeconds = 60;
+  const [seconds, setSeconds] = useState(defaultSeconds);
 
   useEffect(() => {
-    if (isRunning) {
-      intervalRef.current = setInterval(() => {
-        if (seconds > 0) {
-          setSeconds(seconds - 1);
-        } else {
-          setSeconds(60);
-          setIsRunning(false);
-          clearInterval(intervalRef.current); // Ensure interval is cleared
+    const timer = timeStamps[productId];
+
+    if (timer?.isRunning) {
+      setSeconds(() => {
+        const now = Date.now();
+        const diffInMs = now - timer.timestamp;
+        const remainingSeconds = defaultSeconds - Math.floor(diffInMs / 1000);
+        if (remainingSeconds > 0) {
+          return remainingSeconds;
         }
+        clearProductTimer(productId);
+        return defaultSeconds;
+      });
+
+      intervalRef.current = setInterval(() => {
+        setSeconds((prev) => {
+          if (prev <= 1) {
+            clearInterval(intervalRef.current);
+            clearProductTimer(productId);
+            return defaultSeconds;
+          }
+          return prev - 1;
+        });
       }, 1000);
     }
 
     return () => clearInterval(intervalRef.current);
-  }, [isRunning, seconds]);
+  }, [timeStamps, productId, clearProductTimer]);
 
-  useEffect(() => {
-    // localStorage.setItem("watchIsRunning", isRunning); // Store isRunning state
-    if (isRunning) {
-      setTimer(productId, new Date().getTime());
-    } else {
-      clearProductTimer(productId);
-    }
-  }, [isRunning]);
-
-  const formattedTime = `${Math.floor(seconds / 60)}:${seconds % 60}`; // Format time
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     const { value } = e.target;
-
     const floatValue = parseFloat(value);
 
-    if (
-      (!isNaN(floatValue) && floatValue <= offers[0].bidAmount) ||
-      value === ""
-    ) {
-      setDisabled(true);
-    } else {
-      setDisabled(false);
-    }
-
-    if (!isNaN(floatValue)) {
-      setBidAmount(floatValue);
-    }
+    setDisabled(isNaN(floatValue) || floatValue <= offers[0]?.bidAmount);
+    setBidAmount(floatValue || 0);
   };
 
   const submitBid = async () => {
-    if (!user) {
-      return;
-    }
+    if (!user) return;
 
-    const bid = {
-      userId: user.id,
-      productId,
-      bidAmount: bidAmount,
-    };
+    const bid = { userId: user.id, productId, bidAmount };
 
     try {
       const { data } = await axios.post("/api/offers", bid);
-      // localStorage.setItem("timeStamp", data.message);
-      setTimer(productId, data.message);
-
-      setIsRunning(true);
+      setTimer(productId, Date.now());
       onSubmitSuccess();
     } catch (error) {
       console.error(error);
@@ -135,10 +94,7 @@ export function OfferDialogue({
   };
 
   const handleSubmit = () => {
-    startTransition(() => {
-      submitBid();
-    });
-
+    submitBid();
     onClose();
   };
 
@@ -169,12 +125,10 @@ export function OfferDialogue({
               Your bid should be higher than the current bid.
             </DialogDescription>
           )}
-          <DialogDescription>{formattedTime}</DialogDescription>
-          <Button
-            type="submit"
-            onClick={handleSubmit}
-            disabled={isPending || disabled}
-          >
+          <DialogDescription>
+            {Math.floor(seconds / 60)}:{seconds % 60}
+          </DialogDescription>
+          <Button type="submit" onClick={handleSubmit} disabled={disabled}>
             Place Bid
           </Button>
         </DialogFooter>
