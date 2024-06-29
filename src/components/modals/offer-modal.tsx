@@ -12,13 +12,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCurrentUser } from "@/hooks/currentUser";
+import { useBiddingTimer } from "@/hooks/use-bidding-timer";
 import axios from "axios";
 import { useEffect, useRef, useState, useTransition } from "react";
 
 // tried to update this page adasdasdasdasdasdasdasdas
 interface DialogDemoProps {
   isOpen: boolean;
-  productId: String;
+  productId: string;
   offers: any;
   onClose: () => void;
   onSubmitSuccess: () => void;
@@ -36,29 +37,33 @@ export function OfferDialogue({
   const [bidAmount, setBidAmount] = useState<number>(0);
   const [isPending, startTransition] = useTransition();
   const [disabled, setDisabled] = useState(true);
+  const { timeStamps, setTimer, clearAllTimers, clearProductTimer } =
+    useBiddingTimer();
 
-
+  // console.log(timeStamps[productId]);
 
   const [isRunning, setIsRunning] = useState<any>(() => {
-    const storedIsRunning = localStorage.getItem('watchIsRunning');
-    return storedIsRunning === 'true'; // Parse boolean value from string
+    // const storedIsRunning = localStorage.getItem("watchIsRunning");
+    const storedIsRunning = timeStamps[productId]?.isRunning;
+
+    return storedIsRunning === true; // Parse boolean value from string
   });
   const intervalRef = useRef<any>(null);
 
   const [seconds, setSeconds] = useState(() => {
-    const timeStamp : any = localStorage.getItem('timeStamp');
+    // const timeStamp: any = localStorage.getItem("timeStamp");
+    const timeStamp: any = timeStamps[productId]?.timestamp;
     const now: Date = new Date();
     const offerDate: Date = new Date(timeStamp);
     const diffInMs = now.getTime() - offerDate.getTime();
 
     const seconds = Math.floor(diffInMs / 1000);
-    if (seconds<=60){
-      return 60 - seconds
+    if (seconds <= 60) {
+      return 60 - seconds;
     }
-    setIsRunning(false)
+    setIsRunning(false);
     return 60; // Default or stored value
   });
-  
 
   useEffect(() => {
     if (isRunning) {
@@ -77,13 +82,15 @@ export function OfferDialogue({
   }, [isRunning, seconds]);
 
   useEffect(() => {
-    localStorage.setItem('watchIsRunning', isRunning); // Store isRunning state
+    // localStorage.setItem("watchIsRunning", isRunning); // Store isRunning state
+    if (isRunning) {
+      setTimer(productId, new Date().getTime());
+    } else {
+      clearProductTimer(productId);
+    }
   }, [isRunning]);
 
-  
-
   const formattedTime = `${Math.floor(seconds / 60)}:${seconds % 60}`; // Format time
-  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -116,11 +123,10 @@ export function OfferDialogue({
     };
 
     try {
-      console.log("started");
-      
-      const {data} = await axios.post("/api/offers", bid);
-      localStorage.setItem('timeStamp', data.message);
-      
+      const { data } = await axios.post("/api/offers", bid);
+      // localStorage.setItem("timeStamp", data.message);
+      setTimer(productId, data.message);
+
       setIsRunning(true);
       onSubmitSuccess();
     } catch (error) {
@@ -163,9 +169,7 @@ export function OfferDialogue({
               Your bid should be higher than the current bid.
             </DialogDescription>
           )}
-          <DialogDescription>
-              {formattedTime}
-          </DialogDescription>
+          <DialogDescription>{formattedTime}</DialogDescription>
           <Button
             type="submit"
             onClick={handleSubmit}
