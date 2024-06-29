@@ -40,7 +40,7 @@ export function OfferDialogue({
   const intervalRef = useRef<number | null>(null);
 
   const { timeStamps, setTimer, clearProductTimer } = useBiddingTimer();
-  const defaultSeconds = 10;
+  const defaultSeconds = 60;
   const [seconds, setSeconds] = useState(defaultSeconds);
 
   useEffect(() => {
