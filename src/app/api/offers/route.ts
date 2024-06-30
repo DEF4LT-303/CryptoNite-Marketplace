@@ -34,5 +34,7 @@ export async function POST(request: Request) {
     }
   });
 
-  return NextResponse.json({ message: "Bid placed" })
+  console.log(createdBid);
+  
+  return NextResponse.json({ message: createdBid.createdAt })
 }

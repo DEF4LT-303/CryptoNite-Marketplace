@@ -12,9 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCurrentUser } from "@/hooks/currentUser";
+import { useBiddingTimer } from "@/hooks/use-bidding-timer";
 import axios from "axios";
-import { useState, useTransition } from "react";
+import { Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
+// tried to update this page adasdasdasdasdasdasdasdas
 interface DialogDemoProps {
   isOpen: boolean;
   productId: string;
@@ -31,43 +34,72 @@ export function OfferDialogue({
   onSubmitSuccess,
 }: DialogDemoProps) {
   const user = useCurrentUser();
-
-  const [bidAmount, setBidAmount] = useState<number>(0);
-  const [isPending, startTransition] = useTransition();
+  const [bidAmount, setBidAmount] = useState(0);
   const [disabled, setDisabled] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
+  const intervalRef = useRef<number | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { timeStamps, setTimer, clearProductTimer } = useBiddingTimer();
+  const defaultSeconds = 60;
+  const [seconds, setSeconds] = useState(defaultSeconds);
+
+  useEffect(() => {
+    const timer = timeStamps[productId];
+
+    if (timer?.isRunning) {
+      setSeconds(() => {
+        const now = Date.now();
+        const diffInMs = now - timer.timestamp;
+        const remainingSeconds = defaultSeconds - Math.floor(diffInMs / 1000);
+        if (remainingSeconds > 0) {
+          return remainingSeconds;
+        }
+        clearProductTimer(productId);
+        setIsRunning(false); // Stop running when timer is cleared
+        return defaultSeconds;
+      });
+
+      setIsRunning(true); // Timer is running
+      intervalRef.current = window.setInterval(() => {
+        setSeconds((prev) => {
+          if (prev <= 1) {
+            if (intervalRef.current !== null) {
+              clearInterval(intervalRef.current);
+            }
+            clearProductTimer(productId);
+            setIsRunning(false); // Stop running when timer reaches zero
+            return defaultSeconds;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [timeStamps, productId, clearProductTimer]);
+
+  const handleChange = (e: any) => {
     const { value } = e.target;
-
     const floatValue = parseFloat(value);
 
-    if (
-      (!isNaN(floatValue) && floatValue <= offers[0].bidAmount) ||
-      value === ""
-    ) {
-      setDisabled(true);
-    } else {
-      setDisabled(false);
-    }
-
-    if (!isNaN(floatValue)) {
-      setBidAmount(floatValue);
-    }
+    setDisabled(isNaN(floatValue) || floatValue <= offers[0]?.bidAmount);
+    setBidAmount(floatValue || 0);
   };
 
   const submitBid = async () => {
-    if (!user) {
-      return;
-    }
+    if (!user) return;
 
-    const bid = {
-      userId: user.id,
-      productId,
-      bidAmount: bidAmount,
-    };
+    const bid = { userId: user.id, productId, bidAmount };
 
     try {
-      await axios.post("/api/offers", bid);
+      const { data } = await axios.post("/api/offers", bid);
+      setTimer(productId, Date.now());
+      setBidAmount(0);
+      setDisabled(true);
       onSubmitSuccess();
     } catch (error) {
       console.error(error);
@@ -75,10 +107,7 @@ export function OfferDialogue({
   };
 
   const handleSubmit = () => {
-    startTransition(() => {
-      submitBid();
-    });
-
+    submitBid();
     onClose();
   };
 
@@ -104,17 +133,31 @@ export function OfferDialogue({
           </div>
         </div>
         <DialogFooter>
-          {disabled && (
+          {isRunning ? (
+            <DialogDescription className="text-destructive">
+              Please wait before placing another bid.
+            </DialogDescription>
+          ) : disabled ? (
             <DialogDescription className="text-destructive">
               Your bid should be higher than the current bid.
+            </DialogDescription>
+          ) : null}
+          {isRunning && (
+            <DialogDescription>
+              {Math.floor(seconds / 60)}:{seconds % 60}
             </DialogDescription>
           )}
           <Button
             type="submit"
             onClick={handleSubmit}
-            disabled={isPending || disabled}
+            disabled={disabled || isRunning}
+            className="min-w-[120px]"
           >
-            Place Bid
+            {isRunning ? (
+              <Loader2 className="animate-spin" size={16} />
+            ) : (
+              "Submit"
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
