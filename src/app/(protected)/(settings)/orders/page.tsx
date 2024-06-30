@@ -171,7 +171,7 @@ const OrderPage = () => {
 
                           <div className="block md:hidden">
                             {orders.map((order) => (
-                              <Card className="mx-2 my-5 p-2">
+                              <Card className="mx-2 my-5 p-2" key={order.id}>
                                 <CardHeader className="flex flex-col justify-between">
                                   <CardTitle>Order</CardTitle>
                                   <CardDescription className="truncate min-w-[100px]">

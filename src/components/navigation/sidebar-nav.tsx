@@ -30,9 +30,8 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
       {...props}
     >
       {filteredItems.map((item) => (
-        <>
+        <div key={item.href}>
           <Link
-            key={item.href}
             href={item.href}
             className={cn(
               buttonVariants({ variant: "ghost" }),
@@ -44,7 +43,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
           >
             <div className="text-[12px] sm:text-sm">{item.title}</div>
           </Link>
-        </>
+        </div>
       ))}
     </nav>
   );
