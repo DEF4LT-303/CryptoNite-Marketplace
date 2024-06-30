@@ -44,10 +44,10 @@ const UserButton = () => {
             </DropdownMenuItem>
           </Link>
           {isAdmin && (
-            <Link href="/create-product">
+            <Link href="/admin">
               <DropdownMenuItem>
                 <Box className="mr-2 h-4 w-4" />
-                <span>Create Product</span>
+                <span>Admin Dashboard</span>
               </DropdownMenuItem>
             </Link>
           )}

@@ -19,8 +19,6 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
   const pathname = usePathname();
   const isAdmin = useCurrentRole() === "ADMIN";
 
-  const filteredItems = items.filter((item) => isAdmin || !item.isAdmin);
-
   return (
     <nav
       className={cn(
@@ -29,7 +27,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
       )}
       {...props}
     >
-      {filteredItems.map((item) => (
+      {items.map((item) => (
         <div key={item.href}>
           <Link
             href={item.href}

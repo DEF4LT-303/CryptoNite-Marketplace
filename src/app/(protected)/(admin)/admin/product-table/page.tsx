@@ -13,7 +13,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 
-import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -24,42 +23,31 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentUser } from "@/hooks/currentUser";
+import { Product } from "@prisma/client";
 import axios from "axios";
 import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
 
-interface Order {
-  id: string;
-  createdAt: string;
-  status: string;
-  total: number;
-  product: {
-    name: string;
-    images: string[];
-    id: string;
-  };
-}
-
-const OrderPage = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
+const ProductTablePage = () => {
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   const user = useCurrentUser();
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchProducts = async () => {
       try {
-        const response = await axios.get(`/api/order?userId=${user?.id}`);
+        const response = await axios.get(`/api/product`);
 
-        setOrders(response.data);
+        setProducts(response.data);
         setLoading(false);
       } catch (error) {
         // setError(error.message);
         setLoading(false);
       }
     };
-    fetchOrders();
+    fetchProducts();
   }, []);
 
   return (
@@ -90,83 +78,66 @@ const OrderPage = () => {
                   <div className="">
                     <Card x-chunk="dashboard-05-chunk-3">
                       <CardHeader className="px-7">
-                        <CardTitle>Orders</CardTitle>
+                        <CardTitle>Products</CardTitle>
                         <CardDescription>
-                          Recent orders from your store.
+                          Recent Products from your store.
                         </CardDescription>
                       </CardHeader>
 
-                      {orders && orders.length !== 0 ? (
+                      {products && products.length !== 0 ? (
                         <>
                           <CardContent className="hidden md:block">
                             <Table>
                               <TableHeader>
                                 <TableRow>
-                                  <TableHead>Product</TableHead>
+                                  <TableHead>Product Image</TableHead>
                                   <TableHead className="hidden sm:table-cell">
-                                    Order ID
+                                    product ID
                                   </TableHead>
                                   <TableHead className="hidden sm:table-cell">
-                                    Status
+                                    Product Name
                                   </TableHead>
                                   <TableHead className="hidden md:table-cell">
-                                    Date
+                                    Last Updated
                                   </TableHead>
                                   <TableHead className="text-right">
-                                    Amount
+                                    Unit Price
                                   </TableHead>
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
-                                {orders.map((order) => (
-                                  <TableRow key={order.id}>
+                                {products.map((product) => (
+                                  <TableRow key={product.id}>
                                     <TableCell>
                                       <div className="flex flex-col gap-2">
                                         <div className="relative w-20 h-20 overflow-hidden">
                                           <Image
-                                            src={order.product.images[0]}
-                                            alt={order.product.images[0]}
+                                            src={product.images[0]}
+                                            alt="product"
                                             layout="fill"
                                             objectFit="cover"
                                             className="rounded-lg"
                                           />
                                         </div>
-                                        <div>
-                                          <div className="flex flex-col">
-                                            <div className="font-medium">
-                                              {order.product.name}
-                                            </div>
-                                          </div>
-
-                                          <div className="hidden text-sm text-muted-foreground md:inline">
-                                            <p className="truncate max-w-[100px]">
-                                              {order.product.id}
-                                            </p>
-                                          </div>
-                                        </div>
                                       </div>
                                     </TableCell>
                                     <TableCell className="hidden md:table-cell">
                                       <p className="truncate max-w-[120px]">
-                                        {order.id}
+                                        {product.id}
                                       </p>
                                     </TableCell>
-                                    <TableCell className="hidden md:table-cell">
-                                      <Badge
-                                        className="text-xs"
-                                        variant="secondary"
-                                      >
-                                        {order.status}
-                                      </Badge>
+                                    <TableCell className="hidden sm:table-cell">
+                                      {product.name}
                                     </TableCell>
+
                                     <TableCell className="hidden md:table-cell">
                                       {format(
-                                        new Date(order.createdAt),
+                                        new Date(product.createdAt),
                                         "yyyy-MM-dd"
                                       )}
                                     </TableCell>
                                     <TableCell className="text-right">
-                                      ${order.total}
+                                      ${product.price}
                                     </TableCell>
                                   </TableRow>
                                 ))}
@@ -175,12 +146,12 @@ const OrderPage = () => {
                           </CardContent>
 
                           <div className="block md:hidden">
-                            {orders.map((order) => (
-                              <Card className="mx-2 my-5 p-2" key={order.id}>
+                            {products.map((product) => (
+                              <Card className="mx-2 my-5 p-2" key={product.id}>
                                 <CardHeader className="flex flex-col justify-between">
-                                  <CardTitle>Order</CardTitle>
+                                  <CardTitle>product</CardTitle>
                                   <CardDescription className="truncate min-w-[100px]">
-                                    {order.id}
+                                    {product.id}
                                   </CardDescription>
                                 </CardHeader>
                                 <Separator className="my-2 bg-slate-100" />
@@ -191,16 +162,16 @@ const OrderPage = () => {
                                         <CardTitle>Product</CardTitle>
                                         <div className="flex flex-col">
                                           <CardTitle className="text-sm">
-                                            {order.product.name}
+                                            {product.name}
                                           </CardTitle>
                                           <CardDescription className="truncate max-w-[100px] ">
-                                            {order.product.id}
+                                            {product.id}
                                           </CardDescription>
                                         </div>
                                       </div>
                                       <div className="flex flex-col items-end ml-2 gap-2">
                                         <img
-                                          src={order.product.images[0]}
+                                          src={product.images[0]}
                                           alt="product"
                                           className="w-10 h-10 hidden sm:block"
                                         />
@@ -208,18 +179,12 @@ const OrderPage = () => {
                                     </div>
                                     <Separator className="my-2" />
                                     <div className="flex flex-col">
-                                      <div className="flex flex-row justify-between">
-                                        <p>Status</p>
-                                        <CardDescription>
-                                          {order.status}
-                                        </CardDescription>
-                                      </div>
                                       <Separator className="my-2" />
                                       <div className="flex flex-row justify-between">
                                         <p>Date</p>
                                         <CardDescription>
                                           {format(
-                                            new Date(order.createdAt),
+                                            new Date(product.createdAt),
                                             "yyyy-MM-dd"
                                           )}
                                         </CardDescription>
@@ -228,7 +193,7 @@ const OrderPage = () => {
                                       <div className="flex flex-row justify-between">
                                         <p>Amount</p>
                                         <CardDescription>
-                                          ${order.total}
+                                          ${product.price}
                                         </CardDescription>
                                       </div>
                                     </div>
@@ -241,7 +206,7 @@ const OrderPage = () => {
                       ) : (
                         <div className="flex justify-center items-center h-80">
                           <p className="text-lg text-muted-foreground">
-                            No orders found
+                            No Products found
                           </p>
                         </div>
                       )}
@@ -258,4 +223,4 @@ const OrderPage = () => {
   );
 };
 
-export default OrderPage;
+export default ProductTablePage;

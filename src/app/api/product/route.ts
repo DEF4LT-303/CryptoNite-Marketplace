@@ -60,6 +60,7 @@ export async function GET(request: Request) {
     }
 
     const products = await db.product.findMany();
+    console.log('Products:', products);
 
     return NextResponse.json(products);
   }
