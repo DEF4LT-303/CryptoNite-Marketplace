@@ -10,9 +10,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-
 import {
   Table,
   TableBody,
@@ -21,6 +25,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentUser } from "@/hooks/currentUser";
 import { Product } from "@prisma/client";
@@ -64,7 +70,7 @@ const ProductTablePage = () => {
           </div>
         </div>
         <div className="gap-4 p-2 sm:px-6 sm:py-0 md:gap-8">
-          <div className="">
+          <div>
             <Tabs defaultValue="all">
               <div className="flex items-center">
                 <TabsList>
@@ -75,7 +81,7 @@ const ProductTablePage = () => {
               </div>
               <Suspense fallback={<div>Loading...</div>}>
                 <TabsContent value="all">
-                  <div className="">
+                  <div>
                     <Card x-chunk="dashboard-05-chunk-3">
                       <CardHeader className="px-7">
                         <CardTitle>Products</CardTitle>
@@ -86,23 +92,16 @@ const ProductTablePage = () => {
 
                       {products && products.length !== 0 ? (
                         <>
-                          <CardContent className="hidden md:block">
+                          <CardContent>
                             <Table>
                               <TableHeader>
                                 <TableRow>
                                   <TableHead>Product Image</TableHead>
-                                  <TableHead className="hidden sm:table-cell">
-                                    product ID
-                                  </TableHead>
-                                  <TableHead className="hidden sm:table-cell">
-                                    Product Name
-                                  </TableHead>
-                                  <TableHead className="hidden md:table-cell">
-                                    Last Updated
-                                  </TableHead>
-                                  <TableHead className="text-right">
-                                    Unit Price
-                                  </TableHead>
+                                  <TableHead>product Category</TableHead>
+                                  <TableHead>Product Name</TableHead>
+                                  <TableHead>Last Updated</TableHead>
+                                  <TableHead>Unit Price</TableHead>
+                                  {/* <TableHead>Options</TableHead> */}
                                 </TableRow>
                               </TableHeader>
                               <TableBody>
@@ -121,87 +120,55 @@ const ProductTablePage = () => {
                                         </div>
                                       </div>
                                     </TableCell>
-                                    <TableCell className="hidden md:table-cell">
-                                      <p className="truncate max-w-[120px]">
-                                        {product.id}
-                                      </p>
+                                    <TableCell>
+                                      <p>{product.category}</p>
                                     </TableCell>
-                                    <TableCell className="hidden sm:table-cell">
-                                      {product.name}
-                                    </TableCell>
+                                    <TableCell>{product.name}</TableCell>
 
-                                    <TableCell className="hidden md:table-cell">
+                                    <TableCell>
                                       {format(
-                                        new Date(product.createdAt),
+                                        new Date(product.updatedAt),
                                         "yyyy-MM-dd"
                                       )}
                                     </TableCell>
-                                    <TableCell className="text-right">
-                                      ${product.price}
+                                    <TableCell>${product.price}</TableCell>
+                                    <TableCell>
+                                      <DropdownMenu>
+                                        <DropdownMenuTrigger>
+                                          <Button variant="ghost">
+                                            <svg
+                                              xmlns="http://www.w3.org/2000/svg"
+                                              width="24"
+                                              height="24"
+                                              viewBox="0 0 24 24"
+                                              fill="none"
+                                              stroke="currentColor"
+                                              stroke-width="2"
+                                              stroke-linecap="round"
+                                              stroke-linejoin="round"
+                                              className="lucide lucide-ellipsis"
+                                            >
+                                              <circle cx="12" cy="12" r="1" />
+                                              <circle cx="19" cy="12" r="1" />
+                                              <circle cx="5" cy="12" r="1" />
+                                            </svg>
+                                          </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent>
+                                          <DropdownMenuItem className="cursor-pointer">
+                                            Edit
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem className="text-destructive cursor-pointer">
+                                            Delete
+                                          </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                      </DropdownMenu>
                                     </TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>
                             </Table>
                           </CardContent>
-
-                          <div className="block md:hidden">
-                            {products.map((product) => (
-                              <Card className="mx-2 my-5 p-2" key={product.id}>
-                                <CardHeader className="flex flex-col justify-between">
-                                  <CardTitle>product</CardTitle>
-                                  <CardDescription className="truncate min-w-[100px]">
-                                    {product.id}
-                                  </CardDescription>
-                                </CardHeader>
-                                <Separator className="my-2 bg-slate-100" />
-                                <CardContent className="mt-5">
-                                  <div className="flex flex-col justify-between">
-                                    <div className="flex flex-row mb-5 justify-between">
-                                      <div className="flex flex-col gap-5">
-                                        <CardTitle>Product</CardTitle>
-                                        <div className="flex flex-col">
-                                          <CardTitle className="text-sm">
-                                            {product.name}
-                                          </CardTitle>
-                                          <CardDescription className="truncate max-w-[100px] ">
-                                            {product.id}
-                                          </CardDescription>
-                                        </div>
-                                      </div>
-                                      <div className="flex flex-col items-end ml-2 gap-2">
-                                        <img
-                                          src={product.images[0]}
-                                          alt="product"
-                                          className="w-10 h-10 hidden sm:block"
-                                        />
-                                      </div>
-                                    </div>
-                                    <Separator className="my-2" />
-                                    <div className="flex flex-col">
-                                      <Separator className="my-2" />
-                                      <div className="flex flex-row justify-between">
-                                        <p>Date</p>
-                                        <CardDescription>
-                                          {format(
-                                            new Date(product.createdAt),
-                                            "yyyy-MM-dd"
-                                          )}
-                                        </CardDescription>
-                                      </div>
-                                      <Separator className="my-2" />
-                                      <div className="flex flex-row justify-between">
-                                        <p>Amount</p>
-                                        <CardDescription>
-                                          ${product.price}
-                                        </CardDescription>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            ))}
-                          </div>
                         </>
                       ) : (
                         <div className="flex justify-center items-center h-80">
