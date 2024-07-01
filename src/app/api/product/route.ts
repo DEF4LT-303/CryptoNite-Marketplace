@@ -74,13 +74,6 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    // Delete all orders associated with the product first [cascade]
-    await db.order.deleteMany({
-      where: {
-        productId: id,
-      },
-    });
-
     await db.product.delete({
       where: {
         id: id,
