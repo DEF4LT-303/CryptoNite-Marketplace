@@ -82,7 +82,7 @@ model Product {
   price       Float
   images      String[]
   stock       Int?
-  published   Boolean         @default(false)
+  isPublished Boolean         @default(false)
   category    ProductCategory
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt

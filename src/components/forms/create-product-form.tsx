@@ -41,6 +41,7 @@ export function CreateProductForm() {
       price: undefined,
       images: [],
       category: undefined,
+      isPublished: false,
       stock: 1,
     },
   });
@@ -160,6 +161,33 @@ export function CreateProductForm() {
                 </SelectContent>
               </Select>
               <FormDescription>Set a category.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="isPublished"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status</FormLabel>
+              <Select
+                onValueChange={(value) => field.onChange(value === "true")}
+                defaultValue={field.value ? "true" : "false"}
+                disabled={isPending}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select publish status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="false">Not Published</SelectItem>
+                  <SelectItem value="true">Published</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>Publish the product.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
