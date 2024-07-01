@@ -28,7 +28,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useCurrentUser } from "@/hooks/currentUser";
 import { Product } from "@prisma/client";
 import axios from "axios";
 import Image from "next/image";
@@ -37,9 +36,7 @@ import { Suspense, useEffect, useState } from "react";
 const ProductTablePage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const user = useCurrentUser();
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -55,6 +52,22 @@ const ProductTablePage = () => {
     };
     fetchProducts();
   }, []);
+
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await axios.delete(`/api/product/`, {
+        data: { id },
+      });
+      if (response.data.success) {
+        setProducts(products.filter((product) => product.id !== id));
+      } else {
+        setError(response.data.error || "Unknown error occurred");
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      setError("Failed to delete product. Please try again.");
+    }
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -158,7 +171,12 @@ const ProductTablePage = () => {
                                           <DropdownMenuItem className="cursor-pointer">
                                             Edit
                                           </DropdownMenuItem>
-                                          <DropdownMenuItem className="text-destructive cursor-pointer">
+                                          <DropdownMenuItem
+                                            className="text-destructive cursor-pointer"
+                                            onClick={() =>
+                                              handleDelete(product.id)
+                                            }
+                                          >
                                             Delete
                                           </DropdownMenuItem>
                                         </DropdownMenuContent>

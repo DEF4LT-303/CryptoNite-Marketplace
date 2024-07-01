@@ -64,3 +64,32 @@ export async function GET(request: Request) {
     return NextResponse.json(products);
   }
 }
+
+export async function DELETE(request: Request) {
+  const { id } = await request.json();
+
+
+  if (!id) {
+    return NextResponse.json({ error: 'Invalid input' });
+  }
+
+  try {
+    // Delete all orders associated with the product first [cascade]
+    await db.order.deleteMany({
+      where: {
+        productId: id,
+      },
+    });
+
+    await db.product.delete({
+      where: {
+        id: id,
+      },
+    });
+
+    return NextResponse.json({ success: 'Product deleted successfully!' });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    return NextResponse.json({ error: 'Failed to delete product' });
+  }
+}
