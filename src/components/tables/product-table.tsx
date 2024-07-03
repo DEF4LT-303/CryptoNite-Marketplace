@@ -190,7 +190,7 @@ const ProductTable = () => {
           <div>
             <Tabs defaultValue="all">
               <div className="flex items-center">
-                <TabsList>
+                <TabsList className="mb-2">
                   <TabsTrigger value="all">All</TabsTrigger>
                   {productCategories.map((category) => (
                     <TabsTrigger
