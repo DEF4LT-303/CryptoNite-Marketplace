@@ -28,10 +28,10 @@ export default async function Home() {
   // const user = session ? true : false;
 
   return (
-    <>
+    <div>
       <HeroSection />
 
-      <section className="border-t border-gray-500 bg-primary-foreground">
+      <section className="border-t border-gray-500 bg-primary-foreground h-full">
         <MaxWidthWrapper className="py-20">
           <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0">
             {perks.map((perk) => (
@@ -57,6 +57,6 @@ export default async function Home() {
           </div>
         </MaxWidthWrapper>
       </section>
-    </>
+    </div>
   );
 }
