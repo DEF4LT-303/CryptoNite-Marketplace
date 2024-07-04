@@ -42,6 +42,7 @@ import { Product } from "@prisma/client";
 import axios from "axios";
 import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
+import { toastFunction } from "../toastfunction";
 
 const AlertDialogDemo = ({
   productId,
@@ -126,8 +127,10 @@ const ProductTable = () => {
       });
       if (response.data.success) {
         setProducts(products.filter((product) => product.id !== id));
+        toastFunction("Product deleted successfully", "success");
       } else {
         setError(response.data.error || "Unknown error occurred");
+        toastFunction("Failed to delete product.", "destructive");
       }
     } catch (error) {
       console.error("Error deleting product:", error);
