@@ -4,6 +4,16 @@ import { format } from "date-fns";
 import { Search } from "lucide-react";
 
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Card,
   CardContent,
   CardDescription,
@@ -33,12 +43,52 @@ import axios from "axios";
 import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
 
+const AlertDialogDemo = ({
+  productId,
+  onConfirmDelete,
+  onCancel,
+}: {
+  productId: string | null;
+  onConfirmDelete: (productId: string | null) => Promise<void>;
+  onCancel: () => void;
+}) => {
+  return (
+    <AlertDialog
+      open={productId !== null}
+      onOpenChange={(open) => !open && onCancel()}
+    >
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your
+            product.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => onConfirmDelete(productId)}
+            className="bg-destructive text-white"
+          >
+            Continue
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+};
+
 const ProductTable = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [productCategories, setProductCategories] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -69,7 +119,7 @@ const ProductTable = () => {
     setSelectedCategory(category);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string | null) => {
     try {
       const response = await axios.delete(`/api/product/`, {
         data: { id },
@@ -83,6 +133,10 @@ const ProductTable = () => {
       console.error("Error deleting product:", error);
       setError("Failed to delete product. Please try again.");
     }
+  };
+
+  const handleCancel = () => {
+    setSelectedProductId(null);
   };
 
   const ProductTableContent = ({ products }: { products: Product[] }) => {
@@ -155,7 +209,8 @@ const ProductTable = () => {
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive cursor-pointer"
-                          onClick={() => handleDelete(product.id)}
+                          // onClick={() => handleDelete(product.id)}
+                          onClick={() => setSelectedProductId(product.id)}
                         >
                           Delete
                         </DropdownMenuItem>
@@ -164,6 +219,13 @@ const ProductTable = () => {
                   </TableCell>
                 </TableRow>
               ))}
+              {selectedProductId !== null && (
+                <AlertDialogDemo
+                  productId={selectedProductId}
+                  onConfirmDelete={handleDelete}
+                  onCancel={handleCancel}
+                />
+              )}
             </TableBody>
           </Table>
           {/* </TabsContent> */}
