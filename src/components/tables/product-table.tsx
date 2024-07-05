@@ -33,6 +33,7 @@ import axios from "axios";
 import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
 import DeleteProductDialogue from "../modals/delete-product-modal";
+import EditProductDialogue from "../modals/edit-product-modal";
 import { toastFunction } from "../toastfunction";
 
 const ProductTable = () => {
@@ -45,6 +46,8 @@ const ProductTable = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null
   );
+  const [editProductModalOpen, setEditProductModalOpen] = useState(false);
+  const [deleteProductModalOpen, setDeleteProductModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -64,8 +67,6 @@ const ProductTable = () => {
     };
     fetchProducts();
   }, []);
-
-  console.log(productCategories);
 
   const filteredProducts = products.filter(
     (product) => product.category === selectedCategory
@@ -96,6 +97,12 @@ const ProductTable = () => {
 
   const handleCancel = () => {
     setSelectedProductId(null);
+    setDeleteProductModalOpen(false);
+    setEditProductModalOpen(false);
+  };
+
+  const handleEdit = async (id: string | null) => {
+    setSelectedProductId(id);
   };
 
   const ProductTableContent = ({ products }: { products: Product[] }) => {
@@ -161,13 +168,21 @@ const ProductTable = () => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem className="cursor-pointer">
+                        <DropdownMenuItem
+                          className="cursor-pointer"
+                          onClick={() => {
+                            setSelectedProductId(product.id);
+                            setEditProductModalOpen(true);
+                          }}
+                        >
                           Edit
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-destructive cursor-pointer"
-                          // onClick={() => handleDelete(product.id)}
-                          onClick={() => setSelectedProductId(product.id)}
+                          onClick={() => {
+                            setSelectedProductId(product.id);
+                            setDeleteProductModalOpen(true);
+                          }}
                         >
                           Delete
                         </DropdownMenuItem>
@@ -176,10 +191,17 @@ const ProductTable = () => {
                   </TableCell>
                 </TableRow>
               ))}
-              {selectedProductId !== null && (
+              {deleteProductModalOpen && (
                 <DeleteProductDialogue
                   productId={selectedProductId}
                   onConfirmDelete={handleDelete}
+                  onCancel={handleCancel}
+                />
+              )}
+              {editProductModalOpen && (
+                <EditProductDialogue
+                  productId={selectedProductId}
+                  onConfirmEdit={handleEdit}
                   onCancel={handleCancel}
                 />
               )}
@@ -251,7 +273,6 @@ const ProductTable = () => {
                   </Card>
                 </div>
               </Suspense>
-              <TabsContent value="delivered">test</TabsContent>
             </Tabs>
           </div>
         </div>

@@ -6,17 +6,24 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-const EditProductDialogue = () => {
+const EditProductDialogue = ({
+  productId,
+  onConfirmEdit,
+  onCancel,
+}: {
+  productId: string | null;
+  onConfirmEdit: (productId: string | null) => Promise<void>;
+  onCancel: () => void;
+}) => {
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
-      </DialogTrigger>
+    <Dialog
+      open={productId !== null}
+      onOpenChange={(open) => !open && onCancel()}
+    >
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
@@ -47,7 +54,9 @@ const EditProductDialogue = () => {
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit" onClick={() => onConfirmEdit(productId)}>
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
