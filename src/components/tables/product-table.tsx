@@ -4,16 +4,6 @@ import { format } from "date-fns";
 import { Search } from "lucide-react";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
   Card,
   CardContent,
   CardDescription,
@@ -42,43 +32,8 @@ import { Product } from "@prisma/client";
 import axios from "axios";
 import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
+import DeleteProductDialogue from "../modals/delete-product-modal";
 import { toastFunction } from "../toastfunction";
-
-const AlertDialogDemo = ({
-  productId,
-  onConfirmDelete,
-  onCancel,
-}: {
-  productId: string | null;
-  onConfirmDelete: (productId: string | null) => Promise<void>;
-  onCancel: () => void;
-}) => {
-  return (
-    <AlertDialog
-      open={productId !== null}
-      onOpenChange={(open) => !open && onCancel()}
-    >
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            product.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={() => onConfirmDelete(productId)}
-            className="bg-destructive text-white"
-          >
-            Continue
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
 
 const ProductTable = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -135,6 +90,7 @@ const ProductTable = () => {
     } catch (error) {
       console.error("Error deleting product:", error);
       setError("Failed to delete product. Please try again.");
+      toastFunction("Failed to delete product.", "destructive");
     }
   };
 
@@ -146,8 +102,6 @@ const ProductTable = () => {
     return (
       <>
         <CardContent>
-          {/* {productCategories.map((category) => (
-            <TabsContent key={category} value={category}> */}
           <Table>
             <TableHeader>
               <TableRow>
@@ -223,7 +177,7 @@ const ProductTable = () => {
                 </TableRow>
               ))}
               {selectedProductId !== null && (
-                <AlertDialogDemo
+                <DeleteProductDialogue
                   productId={selectedProductId}
                   onConfirmDelete={handleDelete}
                   onCancel={handleCancel}
@@ -231,8 +185,6 @@ const ProductTable = () => {
               )}
             </TableBody>
           </Table>
-          {/* </TabsContent> */}
-          {/* ))} */}
         </CardContent>
       </>
     );
