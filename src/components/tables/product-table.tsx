@@ -46,6 +46,7 @@ const ProductTable = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null
   );
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [editProductModalOpen, setEditProductModalOpen] = useState(false);
   const [deleteProductModalOpen, setDeleteProductModalOpen] = useState(false);
 
@@ -95,14 +96,10 @@ const ProductTable = () => {
     }
   };
 
-  const handleCancel = () => {
+  const handleCancel = async () => {
     setSelectedProductId(null);
     setDeleteProductModalOpen(false);
     setEditProductModalOpen(false);
-  };
-
-  const handleEdit = async (id: string | null) => {
-    setSelectedProductId(id);
   };
 
   const ProductTableContent = ({ products }: { products: Product[] }) => {
@@ -171,7 +168,7 @@ const ProductTable = () => {
                         <DropdownMenuItem
                           className="cursor-pointer"
                           onClick={() => {
-                            setSelectedProductId(product.id);
+                            setSelectedProduct(product);
                             setEditProductModalOpen(true);
                           }}
                         >
@@ -200,8 +197,7 @@ const ProductTable = () => {
               )}
               {editProductModalOpen && (
                 <EditProductDialogue
-                  productId={selectedProductId}
-                  onConfirmEdit={handleEdit}
+                  product={selectedProduct}
                   onCancel={handleCancel}
                 />
               )}
@@ -248,7 +244,7 @@ const ProductTable = () => {
                     <CardHeader className="px-7">
                       <CardTitle>Products</CardTitle>
                       <CardDescription>
-                        Recent Products from your store.
+                        All Products from your store.
                       </CardDescription>
                     </CardHeader>
 

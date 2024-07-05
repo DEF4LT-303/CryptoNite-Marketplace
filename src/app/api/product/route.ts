@@ -87,3 +87,43 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: 'Failed to delete product' });
   }
 }
+
+export async function PUT(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  const body = await request.json();
+  const { name, description, price, images, category, isPublished, stock } = body;
+
+  const validatedFields = ProductSchema.safeParse({ name, description, price, images, category, isPublished, stock });
+
+  console.log(id)
+
+  if (!validatedFields.success) {
+    return NextResponse.json({ error: 'Invalid input' });
+  }
+
+  try {
+    const product = await db.product.update({
+      where: {
+        id: String(id),
+      },
+      data: {
+        name,
+        description,
+        price,
+        images,
+        category,
+        isPublished,
+        stock,
+      },
+    });
+
+    console.log('Product updated:', product);
+
+    return NextResponse.json({ success: 'Product updated successfully!' });
+  } catch (error) {
+    console.error('Error updating product:', error);
+    return NextResponse.json({ error: 'Failed to update product' });
+  }
+}

@@ -1,63 +1,33 @@
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Product } from "@prisma/client";
+import { ProductForm } from "../forms/product-form";
 
 const EditProductDialogue = ({
-  productId,
-  onConfirmEdit,
+  product,
   onCancel,
 }: {
-  productId: string | null;
-  onConfirmEdit: (productId: string | null) => Promise<void>;
+  product: Product | null;
   onCancel: () => void;
 }) => {
   return (
     <Dialog
-      open={productId !== null}
+      open={product !== null}
       onOpenChange={(open) => !open && onCancel()}
     >
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[600px] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Edit product</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Make changes to the product. Click save when you're done.{" "}
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input
-              id="username"
-              defaultValue="@peduarte"
-              className="col-span-3"
-            />
-          </div>
-        </div>
-        <DialogFooter>
-          <Button type="submit" onClick={() => onConfirmEdit(productId)}>
-            Save changes
-          </Button>
-        </DialogFooter>
+        <ProductForm product={product} callback={() => onCancel()} />
       </DialogContent>
     </Dialog>
   );
