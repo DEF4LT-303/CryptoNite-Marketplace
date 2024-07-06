@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,8 +9,8 @@ export default function NotFound() {
   const router = useRouter();
 
   return (
-    <section className="mx-10 px-20">
-      <div className="min-h-screen mx-auto flex flex-col items-center justify-center md:justify-between md:flex-row gap-10">
+    <section className="mx-10">
+      <div className="min-h-screen w-full flex flex-col items-center justify-center md:justify-between md:flex-row gap-10">
         <div className="">
           <div className="flex-col items-center justify-center">
             <p className="text-sm font-medium text-blue-500 dark:text-blue-400">
@@ -24,8 +25,9 @@ export default function NotFound() {
           </div>
 
           <div className="flex items-center mt-6 gap-x-3">
-            <button
-              className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 transition-colors duration-200  border rounded-lg gap-x-2 dark:hover:bg-gray-800  hover:bg-gray-100 dark:text-gray-200 dark:border-gray-700"
+            <Button
+              variant={"outline"}
+              className="flex items-center justify-center w-1/2 px-5 py-2 text-sm"
               onClick={() => router.back()}
             >
               <svg
@@ -44,16 +46,16 @@ export default function NotFound() {
               </svg>
 
               <span>Go back</span>
-            </button>
+            </Button>
 
-            <button className="w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
+            <Button className="w-1/2 px-5 py-2 text-sm tracking-wide text-white transition-colors duration-200 bg-blue-500 rounded-lg shrink-0 hover:bg-blue-600 dark:hover:bg-blue-500 dark:bg-blue-600">
               <Link href="/">Take me home</Link>
-            </button>
+            </Button>
           </div>
         </div>
 
-        <div className="">
-          <Image src="/svgs/404.svg" alt="Error 404" width={300} height={300} />
+        <div className="w-full mt-12 lg:w-1/2 lg:mt-0 flex items-center justify-center">
+          <Image src="/svgs/404.svg" alt="Error 404" width={500} height={500} />
         </div>
       </div>
     </section>

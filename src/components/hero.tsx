@@ -3,11 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import MaxWidthWrapper from "./max-width-wrapper";
 import { Button, buttonVariants } from "./ui/button";
+import { FlipWords } from "./ui/flip-words";
 
 const HeroSection = () => {
+  const words = ["NFTs", "Digital Assets", "Collectibles"];
+
   return (
     <div className="bg-background">
-      <div className="w-full h-[500px] dark:bg-grid-small-white/[0.2] bg-grid-small-black/[0.2] relative flex items-center justify-center">
+      <div className="w-full h-[500px] dark:bg-black bg-white  dark:bg-dot-white/[0.2] bg-dot-black/[0.2] relative flex items-center justify-center">
         {/* Radial gradient for the container to give a faded look */}
         <div className="absolute bg-background pointer-events-none inset-0 flex items-center justify-center [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
         <MaxWidthWrapper>
@@ -17,7 +20,9 @@ const HeroSection = () => {
                 <div className="lg:max-w-lg flex flex-col items-start justify-start">
                   <h1 className="text-2xl font-bold tracking-tight text-grey-900 sm:text-5xl">
                     Best place for <br /> high-quality{" "}
-                    <span className="text-blue-500 ">Digital Assets</span>
+                    <span className="text-blue-500">
+                      <FlipWords words={words} className="text-blue-500" />
+                    </span>
                   </h1>
 
                   <p className="mt-6 text-lg max-w-prose text-muted-foreground">

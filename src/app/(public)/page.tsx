@@ -1,6 +1,6 @@
-import { BeamInfo } from "@/components/beam-info";
 import HeroSection from "@/components/hero";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
+import { StickyScrollReveal } from "@/components/parallax-scroll";
 import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
 
 const perks = [
@@ -61,7 +61,8 @@ export default async function Home() {
 
       <section className="mt-10">
         <MaxWidthWrapper>
-          <BeamInfo />
+          {/* <BeamInfo /> */}
+          <StickyScrollReveal />
         </MaxWidthWrapper>
       </section>
     </div>

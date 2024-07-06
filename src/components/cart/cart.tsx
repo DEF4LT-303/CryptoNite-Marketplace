@@ -102,11 +102,7 @@ const Cart = () => {
               aria-hidden="true"
               className="relative mb-4 h-60 w-60 text-muted-foreground"
             >
-              <Image
-                src="/images/hippo-empty-cart.png"
-                fill
-                alt="empty shopping cart hippo"
-              />
+              <Image src="/svgs/cat.svg" fill alt="empty shopping cart hippo" />
             </div>
 
             <div className="text-xl font-semibold">Your Cart is Empty</div>
