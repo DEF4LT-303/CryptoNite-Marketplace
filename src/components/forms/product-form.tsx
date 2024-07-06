@@ -23,55 +23,79 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ProductSchema } from "@/schemas";
+import { Product } from "@prisma/client";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
 import { useRef, useTransition } from "react";
 import ImageUploader from "../image-uploader";
 import { toastFunction } from "../toastfunction";
 
-export function CreateProductForm() {
+type FormProps = {
+  product: Product | null;
+  callback?: () => void;
+};
+
+export function ProductForm({ product, callback }: FormProps) {
   const [isPending, startTransition] = useTransition();
   const imageUploaderRef = useRef<any>(null);
 
   const form = useForm<z.infer<typeof ProductSchema>>({
     resolver: zodResolver(ProductSchema),
     defaultValues: {
-      name: undefined,
-      description: undefined,
-      price: undefined,
-      images: [],
-      category: undefined,
-      stock: 1,
+      name: undefined || product?.name,
+      description: undefined || product?.description,
+      price: undefined || product?.price,
+      images: [] || product?.images,
+      category: undefined || product?.category,
+      isPublished: false || product?.isPublished,
+      stock: 1 || product?.stock,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
     startTransition(async () => {
-      const status = await imageUploaderRef.current.uploadImage();
+      if (!product) {
+        const status = await imageUploaderRef.current.uploadImage();
 
-      if (status && status.error) {
-        toastFunction(status.error, "destructive");
-        return;
+        if (status && status.error) {
+          toastFunction(status.error, "destructive");
+          return;
+        }
+
+        data.images = status.uploadUrls; // Extend the data with image URLs
       }
 
-      data.images = status.uploadUrls; // Extend the data with image URLs
+      if (product) {
+        axios
+          .put(`/api/product?id=${product.id}`, data)
+          .then(async ({ data }) => {
+            if (data.success) {
+              toastFunction(data.success, "success");
+            } else {
+              toastFunction(data.error, "destructive");
+            }
+            if (callback) callback();
+            form.reset();
+          })
+          .catch((error) => {
+            toastFunction("Request failed! An error occurred.", "destructive");
+          });
+      } else {
+        axios
+          .post("/api/product", data)
+          .then(async ({ data }) => {
+            if (data.success) {
+              toastFunction(data.success, "success");
+            } else {
+              toastFunction(data.error, "destructive");
+            }
 
-      console.log("Data to be sent:", data);
-
-      axios
-        .post("/api/product", data)
-        .then(async ({ data }) => {
-          if (data.success) {
-            toastFunction(data.success, "success");
-          } else {
-            toastFunction(data.error, "destructive");
-          }
-
-          form.reset();
-        })
-        .catch((error) => {
-          toastFunction("Request failed! An error occurred.", "destructive");
-        });
+            form.reset();
+          })
+          .catch((error) => {
+            toastFunction("Request failed! An error occurred.", "destructive");
+          });
+      }
     });
   };
 
@@ -167,6 +191,33 @@ export function CreateProductForm() {
 
         <FormField
           control={form.control}
+          name="isPublished"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Status</FormLabel>
+              <Select
+                onValueChange={(value) => field.onChange(value === "true")}
+                defaultValue={field.value ? "true" : "false"}
+                disabled={isPending}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select publish status" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="false">Not Published</SelectItem>
+                  <SelectItem value="true">Published</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormDescription>Publish the product.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="stock"
           render={({ field }) => (
             <FormItem>
@@ -197,7 +248,13 @@ export function CreateProductForm() {
 
         <Button type="submit" disabled={isPending}>
           {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {isPending ? "Creating Product..." : "Create Product"}
+          {product
+            ? isPending
+              ? "Updating..."
+              : "Update"
+            : isPending
+            ? "Creating..."
+            : "Create"}
         </Button>
       </form>
     </Form>

@@ -9,7 +9,7 @@ import { cn, formatPrice } from "@/lib/utils";
 import { Product } from "@prisma/client";
 import axios from "axios";
 
-import { Check, Loader2, X } from "lucide-react";
+import { Check, ImageIcon, Loader2, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -134,7 +134,11 @@ const CheckoutPage = () => {
                                   alt="product image"
                                   className="h-full w-full rounded-md object-cover object-center sm:h-48 sm:w-48"
                                 />
-                              ) : null}
+                              ) : (
+                                <div className="flex items-center justify-center h-full bg-foreground-100">
+                                  <ImageIcon />
+                                </div>
+                              )}
                             </div>
                           </div>
 

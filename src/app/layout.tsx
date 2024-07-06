@@ -25,18 +25,16 @@ export default async function RootLayout({
 
   return (
     <SessionProvider session={session}>
-      <html lang="en" className="h-full">
+      <html lang="en" className="h-full bg-background">
         <body
           className={cn(
             "relative h-full font-sans antialiased",
             inter.className
           )}
         >
-          <ThemeProvider attribute="class" disableTransitionOnChange>
+          <ThemeProvider attribute="class">
             <NextUIProvider>
-              <main className="bg-background">
-                <div className="">{children}</div>
-              </main>
+              <main>{children}</main>
             </NextUIProvider>
             <Toaster />
             <DefaultToaster />

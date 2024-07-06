@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import NavItems from "@/components/navigation/navItems";
 import UserButton from "@/components/user-button";
+import Image from "next/image";
 import Cart from "../cart/cart";
 import MaxWidthWrapper from "../max-width-wrapper";
 import { ToggleTheme } from "../settings/ToggleTheme";
@@ -18,8 +19,14 @@ const Navbar = ({ user }: any) => {
           <div className="border-b border-gray-500">
             <div className="flex h-16 items-center">
               <MobileNav />
-              <div className="ml-4 flex lg:ml-0">
-                <Link href="/">
+              <div className="ml-4 lg:ml-0">
+                <Link href="/" className="flex justify-start items-center">
+                  <Image
+                    src="/svgs/logo.svg"
+                    alt="Crypto Nite Logo"
+                    width={55}
+                    height={55}
+                  />
                   <h2 className="text-blue-500 text-2xl font-semibold">
                     Crypto
                     <span className="text-emerald-500 dark:text-emerald-300">

@@ -116,6 +116,8 @@ export const ProductSchema = z.object({
     message: "Stock must be at least 1",
   }),
 
+  isPublished: z.boolean(),
+
   images: z.array(z.string())
 
   // image: z

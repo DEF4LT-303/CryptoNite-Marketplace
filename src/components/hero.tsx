@@ -1,46 +1,54 @@
 import Link from "next/link";
 
+import Image from "next/image";
 import MaxWidthWrapper from "./max-width-wrapper";
 import { Button, buttonVariants } from "./ui/button";
 
 const HeroSection = () => {
   return (
-    <MaxWidthWrapper>
-      <div className="bg-background duration-1000 animate-in animate fade-in-5 slide-in-from-right-2.5">
-        <div className="px-6 py-16 mx-auto">
-          <div className="items-center lg:flex">
-            <div className="w-full lg:w-1/2">
-              <div className="lg:max-w-lg flex flex-col items-start justify-start">
-                <h1 className="text-2xl font-bold tracking-tight text-grey-900 sm:text-5xl">
-                  Best place for <br /> high-quality{" "}
-                  <span className="text-blue-500 ">Digital Assets</span>
-                </h1>
+    <div className="bg-background">
+      <div className="w-full h-[500px] dark:bg-grid-small-white/[0.2] bg-grid-small-black/[0.2] relative flex items-center justify-center">
+        {/* Radial gradient for the container to give a faded look */}
+        <div className="absolute bg-background pointer-events-none inset-0 flex items-center justify-center [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]"></div>
+        <MaxWidthWrapper>
+          <div className="relative px-6 py-16 mx-auto duration-1000 animate-in animate fade-in-5 slide-in-from-right-2.5 ">
+            <div className="items-center flex flex-col md:flex-row">
+              <div className="w-full lg:w-1/2">
+                <div className="lg:max-w-lg flex flex-col items-start justify-start">
+                  <h1 className="text-2xl font-bold tracking-tight text-grey-900 sm:text-5xl">
+                    Best place for <br /> high-quality{" "}
+                    <span className="text-blue-500 ">Digital Assets</span>
+                  </h1>
 
-                <p className="mt-6 text-lg max-w-prose text-muted-foreground">
-                  Welcome to virtual$ets. Every asset on our platform is
-                  verified by our team to ensure our highest quality standards.
-                </p>
+                  <p className="mt-6 text-lg max-w-prose text-muted-foreground">
+                    Welcome to CryptoNite Virtual Assets. Every asset on our
+                    platform is verified by our team to ensure our highest
+                    quality standards.
+                  </p>
 
-                <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                  <Link href="/products" className={buttonVariants()}>
-                    Browse Trending
-                  </Link>
-                  <Button variant="ghost">Our Quality Promise &rarr;</Button>
+                  <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                    <Link href="/products" className={buttonVariants()}>
+                      Browse Trending
+                    </Link>
+                    <Button variant="ghost">Our Quality Promise &rarr;</Button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex items-center justify-center w-full mt-6 lg:mt-0 lg:w-1/2">
-              <img
-                className="w-full h-full lg:max-w-3xl"
-                src="https://merakiui.com/images/components/Catalogue-pana.svg"
-                alt="Catalogue-pana.svg"
-              />
+              <div className="flex items-center justify-center w-1/2 mt-6">
+                <Image
+                  className="lg:max-w-3xl hidden md:block"
+                  src="/svgs/ether.svg"
+                  alt="Ether.svg"
+                  width={300}
+                  height={300}
+                />
+              </div>
             </div>
           </div>
-        </div>
+        </MaxWidthWrapper>
       </div>
-    </MaxWidthWrapper>
+    </div>
   );
 };
 

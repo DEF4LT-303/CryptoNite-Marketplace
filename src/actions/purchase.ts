@@ -13,18 +13,24 @@ export const BuyProduct = async (products: Product[], quantities: number[]) => {
         throw new Error(`Product with ID ${productId} not found`);
       }
 
-      return {
+      const lineItem: any = {
         price_data: {
           currency: 'usd',
           unit_amount: Math.round(product.price * 100),
           product_data: {
             name: product.name,
             description: product.description,
-            images: [product.images[0] ?? ''],
           },
         },
         quantity: quantities[index],
       };
+
+      // If product has images
+      if (product.images[0]) {
+        lineItem.price_data.product_data.images = [product.images[0]];
+      }
+
+      return lineItem;
     })
   );
 

@@ -13,7 +13,7 @@ import {
 } from "@nextui-org/react";
 import { Offers, Product } from "@prisma/client";
 import axios from "axios";
-import { Clock } from "lucide-react";
+import { Clock, ImageIcon } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 
 type OffersProps = Offers & { user: { name: string } };
@@ -62,16 +62,22 @@ const DigitalAssetPage = ({ id }: { id: string }) => {
     <MaxWidthWrapper>
       {product && (
         <div className="flex flex-col gap-4 my-5">
-          <div className="flex flex-col md:flex-row md:gap-4">
-            <Card className="md:my-5 bg-primary-foreground rounded-sm border md:w-[450px]">
-              <Image
-                alt={product.name}
-                className="w-full object-cover h-[340px]"
-                shadow="sm"
-                radius="none"
-                width="100%"
-                src={product.images[0]}
-              />
+          <div className="flex flex-col md:flex-row md:gap-4 ">
+            <Card className="md:my-5 bg-primary-foreground rounded-sm border md:w-[450px] h-[320px]">
+              {product.images.length > 0 ? (
+                <Image
+                  alt={product.name}
+                  className="w-full object-fill"
+                  shadow="sm"
+                  radius="none"
+                  width="100%"
+                  src={product.images[0]}
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full">
+                  <ImageIcon />
+                </div>
+              )}
             </Card>
 
             <Card className="py-4 my-5 bg-primary-foreground flex-grow rounded-sm border">
@@ -95,9 +101,9 @@ const DigitalAssetPage = ({ id }: { id: string }) => {
                 </p>
                 <small className="text-default-500">$ {product.price}</small>
               </CardBody>
-              <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <CardFooter className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full">
                 <Button
-                  className="bg-blue-500 hover:bg-blue-400 w-1/2"
+                  className="bg-blue-500 hover:bg-blue-400 w-full"
                   disabled={!user}
                 >
                   Buy Now

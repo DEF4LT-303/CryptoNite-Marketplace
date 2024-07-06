@@ -1,3 +1,4 @@
+import { BeamInfo } from "@/components/beam-info";
 import HeroSection from "@/components/hero";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import { ArrowDownToLine, CheckCircle, Leaf } from "lucide-react";
@@ -28,10 +29,10 @@ export default async function Home() {
   // const user = session ? true : false;
 
   return (
-    <>
+    <div>
       <HeroSection />
 
-      <section className="border-t border-gray-500 bg-primary-foreground">
+      <section className="border-t border-b border-gray-500 bg-primary-foreground h-full">
         <MaxWidthWrapper className="py-20">
           <div className="grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 lg:gap-x-8 lg:gap-y-0">
             {perks.map((perk) => (
@@ -57,6 +58,12 @@ export default async function Home() {
           </div>
         </MaxWidthWrapper>
       </section>
-    </>
+
+      <section className="mt-10">
+        <MaxWidthWrapper>
+          <BeamInfo />
+        </MaxWidthWrapper>
+      </section>
+    </div>
   );
 }

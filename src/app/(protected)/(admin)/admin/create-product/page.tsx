@@ -1,5 +1,5 @@
 import { RoleGate } from "@/components/auth/role-gate";
-import { CreateProductForm } from "@/components/forms/create-product-form";
+import { ProductForm } from "@/components/forms/product-form";
 import { Separator } from "@/components/ui/separator";
 import { UserRole } from "@prisma/client";
 
@@ -14,7 +14,7 @@ const CreateProductPage = () => {
           </p>
         </div>
         <Separator />
-        <CreateProductForm />
+        <ProductForm product={null} />
       </div>
     </RoleGate>
   );

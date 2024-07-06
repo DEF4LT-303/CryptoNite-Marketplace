@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { Search } from "lucide-react";
+import { ImageIcon, Search } from "lucide-react";
 
 import {
   Card,
@@ -25,6 +25,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCurrentUser } from "@/hooks/currentUser";
 import axios from "axios";
+import Image from "next/image";
 import { Suspense, useEffect, useState } from "react";
 
 interface Order {
@@ -34,7 +35,7 @@ interface Order {
   total: number;
   product: {
     name: string;
-    image: string;
+    images: string[];
     id: string;
   };
 }
@@ -121,22 +122,26 @@ const OrderPage = () => {
                                   <TableRow key={order.id}>
                                     <TableCell>
                                       <div className="flex flex-col gap-2">
-                                        <img
-                                          src={order.product.image}
-                                          alt="product"
-                                          className="w-10 h-10 hidden md:block"
-                                        />
+                                        <div className="relative w-20 h-20 overflow-hidden">
+                                          {order.product.images.length > 0 ? (
+                                            <Image
+                                              src={order.product.images[0]}
+                                              alt="product"
+                                              layout="fill"
+                                              objectFit="cover"
+                                              className="rounded-lg"
+                                            />
+                                          ) : (
+                                            <div className="flex items-center justify-center h-full bg-foreground-100 rounded-lg">
+                                              <ImageIcon />
+                                            </div>
+                                          )}
+                                        </div>
                                         <div>
                                           <div className="flex flex-col">
                                             <div className="font-medium">
                                               {order.product.name}
                                             </div>
-                                          </div>
-
-                                          <div className="hidden text-sm text-muted-foreground md:inline">
-                                            <p className="truncate max-w-[100px]">
-                                              {order.product.id}
-                                            </p>
                                           </div>
                                         </div>
                                       </div>
@@ -171,7 +176,7 @@ const OrderPage = () => {
 
                           <div className="block md:hidden">
                             {orders.map((order) => (
-                              <Card className="mx-2 my-5 p-2">
+                              <Card className="mx-2 my-5 p-2" key={order.id}>
                                 <CardHeader className="flex flex-col justify-between">
                                   <CardTitle>Order</CardTitle>
                                   <CardDescription className="truncate min-w-[100px]">
@@ -181,24 +186,29 @@ const OrderPage = () => {
                                 <Separator className="my-2 bg-slate-100" />
                                 <CardContent className="mt-5">
                                   <div className="flex flex-col justify-between">
-                                    <div className="flex flex-row mb-5 justify-between">
+                                    <div className="flex flex-col sm:flex-row mb-5 justify-between gap-5">
                                       <div className="flex flex-col gap-5">
                                         <CardTitle>Product</CardTitle>
                                         <div className="flex flex-col">
                                           <CardTitle className="text-sm">
                                             {order.product.name}
                                           </CardTitle>
-                                          <CardDescription className="truncate max-w-[100px] ">
-                                            {order.product.id}
-                                          </CardDescription>
                                         </div>
                                       </div>
-                                      <div className="flex flex-col items-end ml-2 gap-2">
-                                        <img
-                                          src={order.product.image}
-                                          alt="product"
-                                          className="w-10 h-10 hidden sm:block"
-                                        />
+                                      <div className="relative w-20 h-20 overflow-hidden">
+                                        {order.product.images.length > 0 ? (
+                                          <Image
+                                            src={order.product.images[0]}
+                                            alt="product"
+                                            layout="fill"
+                                            objectFit="cover"
+                                            className="rounded-lg w-full"
+                                          />
+                                        ) : (
+                                          <div className="flex items-center justify-center h-full bg-foreground-100 rounded-lg">
+                                            <ImageIcon />
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                     <Separator className="my-2" />

@@ -23,7 +23,7 @@ const AddToCartButton = ({ product }: { product: Product }) => {
 
   return (
     <Button
-      className=" w-1/2 bg-emerald-600 hover:bg-emerald-500"
+      className="w-full bg-emerald-600 hover:bg-emerald-500"
       variant="secondary"
       disabled={!!isSuccess}
       onClick={() => {
