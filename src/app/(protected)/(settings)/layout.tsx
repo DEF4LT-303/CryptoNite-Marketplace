@@ -24,11 +24,6 @@ const sidebarNavItems = [
     isAdmin: false,
   },
   {
-    title: "Create Product",
-    href: "/create-product",
-    isAdmin: true,
-  },
-  {
     title: "Settings",
     href: "/settings",
     isAdmin: false,
