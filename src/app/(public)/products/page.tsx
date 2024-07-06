@@ -1,6 +1,9 @@
 "use client";
 
-import NFTCards from "@/components/cards/nft-cards";
+import {
+  default as NFTCards,
+  default as ProductCards,
+} from "@/components/cards/nft-cards";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import CardSkeletonLoader from "@/components/skeletons/card-skeleton-loader";
 import { Separator } from "@/components/ui/separator";
@@ -91,7 +94,7 @@ const ProductPage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 justify-center items-center w-auto md:w-full">
               {assets.map((asset) => (
-                <NFTCards key={asset.id} {...asset} />
+                <ProductCards key={asset.id} {...asset} />
               ))}
             </div>
           )}

@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { Search } from "lucide-react";
+import { ImageIcon, Search } from "lucide-react";
 
 import {
   Card,
@@ -123,13 +123,19 @@ const ProductTable = () => {
                   <TableCell>
                     <div className="flex flex-col gap-2">
                       <div className="relative w-20 h-20 overflow-hidden">
-                        <Image
-                          src={product.images[0]}
-                          alt="product"
-                          layout="fill"
-                          objectFit="cover"
-                          className="rounded-lg"
-                        />
+                        {product.images.length > 0 ? (
+                          <Image
+                            src={product.images[0]}
+                            alt="product"
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-lg"
+                          />
+                        ) : (
+                          <div className="flex items-center justify-center h-full bg-foreground-100 rounded-lg">
+                            <ImageIcon />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </TableCell>

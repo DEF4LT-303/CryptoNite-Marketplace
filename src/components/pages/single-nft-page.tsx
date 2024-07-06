@@ -22,7 +22,7 @@ import {
 } from "@nextui-org/react";
 import { Offers, Product } from "@prisma/client";
 import axios from "axios";
-import { Clock, Tag } from "lucide-react";
+import { Clock, ImageIcon, Tag } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 
 type OffersProps = Offers & { user: { name: string } };
@@ -157,15 +157,21 @@ const NFTPage = ({ id }: { id: string }) => {
       {product && (
         <div className="flex flex-col gap-4 my-5">
           <div className="flex flex-col md:flex-row md:gap-4">
-            <Card className="md:my-5 bg-primary-foreground rounded-sm border md:w-[450px]">
-              <Image
-                alt={product.name}
-                className="w-full object-cover h-[340px]"
-                shadow="sm"
-                radius="none"
-                width="100%"
-                src={product.images[0]}
-              />
+            <Card className="md:my-5 bg-primary-foreground rounded-sm border md:w-[450px] h-[320px]">
+              {product.images.length > 0 ? (
+                <Image
+                  alt={product.name}
+                  className="w-full object-fill"
+                  shadow="sm"
+                  radius="none"
+                  width="100%"
+                  src={product.images[0]}
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full bg-foreground-100">
+                  <ImageIcon />
+                </div>
+              )}
             </Card>
 
             <Card className="py-4 my-5 bg-primary-foreground flex-grow rounded-sm border">
