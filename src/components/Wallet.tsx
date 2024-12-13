@@ -23,7 +23,7 @@ const Wallet = ({ saveState }: WalletProps) => {
             const accounts = await web3.eth.getAccounts()
             const contract = new web3.eth.Contract(
                 ABI,
-                "0xef0560E9A8EB2f4004dB5801Ea3e0495663BA7f0"
+                "0xa3D40cDf17bc7fFE248B00CE59d5B11dd47321ca"
             );
             console.log(contract);
 

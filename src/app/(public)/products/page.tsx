@@ -40,31 +40,58 @@ const ProductPage = () => {
     });
     
   },[]);
-  
-  const purchase = async(id) => {
-    // event.preventDefault();
-        try{
-            const {contract,web3}=state;
-            const eth = 0.1;
-            const weiValue=web3.utils.toWei(eth,"ether");
-            await contract.methods.donate().send({from:state.account,value:weiValue,gas:480000});
-            
-            const data = {
-              id: id,
-              walletAddress: state.account 
-            };
-          
-            const result = await axios.post("/api/cryptoPurchase", data
-         // Specify JSON content type
-            );
-            console.log(result);
-            
-            alert("Transaction Succesful your nft has been minted");
-        }
-    catch(error){
-       alert("Transaction failed");
+
+
+  const purchase = async (id) => {
+    try {
+      const price = 0.1;
+      const { contract, account, web3 } = state; // Extract state variables
+      const stakeAmount = web3.utils.toWei("0.01", "ether"); // Fixed stake amount
+
+      // Step 1: Deposit stake
+      await contract.methods.depositStake().send({ from: account, value: stakeAmount });
+      console.log("Stake deposited successfully");
+
+      // Step 2: Call backend to create metadata
+      const data = {
+        id: id,
+        walletAddress: account,
+      };
+      const response = await axios.post("/api/createMetaData", data);
+
+      // Step 3: Get metadata URI from backend response
+      const metadataURI = response.data.metadataURI;
+      console.log("Metadata URI:", metadataURI);
+
+      // Step 4: Display metadata to the user for review
+      const userConfirmed = window.confirm(
+        `Metadata generated:\n${metadataURI}\nDo you want to mint this NFT for price: ${price} ETH?`
+      );
+
+      if (!userConfirmed) {
+        alert("Minting canceled. Your stake will remain until you proceed or request a refund.");
+        return;
+      }
+
+      // Step 5: Call the smart contract to mint NFT
+      const metadataCreationFee = web3.utils.toWei(price.toString(), "ether"); // Dynamic price (in ETH)
+      const transaction = await contract.methods
+        .mintNFT(metadataURI)
+        .send({ from: account, value: metadataCreationFee, gas: 480000 });
+
+      // Step 6: Extract tokenId from event
+      const event = transaction.events.NFTMinted; // Ensure contract emits this event
+      const tokenId = event.returnValues.tokenId;
+      console.log("Transaction successful:", transaction);
+
+      alert(`NFT minted successfully! Token ID: ${tokenId}`);
+    } catch (error) {
+      console.error("Error in purchase flow:", error);
+      alert("Transaction failed. Please try again.");
     }
   };
+
+
 
   return (
     <div className="flex justify-center items-center">
